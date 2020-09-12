@@ -8,7 +8,7 @@ const DOMController = () => {
   const mainDiv = document.querySelector(".main");
   const toDo = document.querySelector(".todo");
   const navToggler = document.querySelector(".hamburger-button");
-  const projectsUL = document.querySelector("projects");
+  const projectsUL = document.querySelector(".projects");
 
   const toggleLeftNav = () => {
     if(leftNav.style.display != "none") {
@@ -32,17 +32,21 @@ const DOMController = () => {
       li.innerHTML = project.name;
       projectsList.push(li);
     }
-    
+
     return projectsList;
     
   }
 
   const toggleProjects = () => {
-    const list = getProjectsList();
-    
-    if(projectsUL.children > 0) {
+
+    const list = getProjectsList(); // to render on page
+    const nowToggled = projectsUL.querySelectorAll("li");
+    console.log(nowToggled)
+    console.log(list)
+
+    if(nowToggled.length !== 0) {
       // untoggle(aka remove) the li elements
-      for(let item of Array.from(projectsUL.children)) {
+      for(let item of nowToggled) {
         item.remove()
       }
     } else {
@@ -53,7 +57,7 @@ const DOMController = () => {
 
   }
 
-  projectsUL.addEventListener("click", toggleProjects)
+  projectsUL.addEventListener("click", toggleProjects);
   navToggler.addEventListener("click", toggleLeftNav);
 
 

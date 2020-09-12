@@ -15,10 +15,8 @@ const ProjectsHandler = () => {
           removeProject,}
           
 }
-const p = ProjectsHandler()
-p.addProject({name: "gabi"})
-console.log(p.projects)
-
 const P = ProjectsHandler();
+
+P.addProject({name: "gabi"});
 
 export default P;

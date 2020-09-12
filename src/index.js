@@ -1,8 +1,8 @@
 
 import D from "../src/dom.js";
-import P from "../src/dom.js";
+import P from "../src/projects.js";
 
-console.log(D);
+
 console.log(P);
 
 
