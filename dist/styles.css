@@ -1,0 +1,65 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+nav {
+  display: flex;
+  align-items: center;
+  padding: 6px 15px;
+  background-color: rgb(214, 72, 72);
+}
+.nav-left, .nav-right {
+  display: inline-block;
+}
+
+.hamburger-button {
+  padding: 7px;
+
+}
+
+.hamburger-button div {
+  
+  width: 16px;
+  height: 1px;
+  background-color: white;
+  margin: 4px 0;
+}
+
+.hamburger-button:hover {
+  border-radius: 4px;
+  background-color: rgba(168, 168, 168, 0.473);
+}
+
+.left-nav {
+  position: absolute;
+  top: 45px;
+  bottom: 0px;
+  padding-left: 45px;
+  padding-top: 40px;
+  width: 300px;
+  background-color: rgb(228, 228, 228);
+  overflow-y: auto;
+}
+
+.todo {
+  margin-left: 300px;
+  width: 100%;
+  min-height: 400px;
+
+}
+
+ul {
+  list-style: none;
+}
+
+.projects {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.projects:before {
+  content: ""
+}
