@@ -42,13 +42,13 @@ nav {
   width: 300px;
   background-color: rgb(228, 228, 228);
   overflow-y: auto;
+  margin: 0;
 }
 
 .todo {
-  margin-left: 300px;
   width: 100%;
   min-height: 400px;
-
+  background-color: rgba(12, 0, 180, 0.26);
 }
 
 ul {
@@ -62,4 +62,14 @@ ul {
 
 .projects:before {
   content: ""
+}
+
+.fake-left-nav {
+  width: 300px;
+}
+
+@media only screen and (max-width: 996px) {
+  .left-nav, .fake-left-nav {
+    display: none !important;
+  }
 }
