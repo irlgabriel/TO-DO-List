@@ -45,8 +45,8 @@ nav {
   position: absolute;
   top: 0;
   bottom: 0px;
-  padding-left: 45px;
-  padding-top: 40px;
+  padding-left: 35px;
+  padding-top: 30px;
   width: 300px;
   background-color: rgba(235, 231, 231, 0.411);
   overflow-y: auto;
@@ -64,6 +64,11 @@ nav {
 ul {
   list-style: none;
   display: inline-block;
+}
+
+ul li {
+  font-weight: 100;
+  margin-left: 35px;
 }
 
 .projects {

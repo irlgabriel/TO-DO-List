@@ -1,22 +1,16 @@
+import {Note, myNotes} from "../src/notes.js"
 
-const ProjectsHandler = () => {
-  let projects = [];
+const myProjects = []
 
-  const addProject = (project) => {
-    projects.push(project)
-  }
-
-  const removeProject = (project) => {
-    // to be continued
-  }
-
-  return {projects,
-          addProject,
-          removeProject,}
-          
+function Project(title) {
+  this.title = title;
+  this.notes = [];
 }
-const P = ProjectsHandler();
 
-P.addProject({name: "gabi"});
+Project.prototype.addNote = function(note) {
+  this.notes.push(note)
+}
 
-export default P;
+
+export default {myProjects,
+                 Project };

@@ -1,9 +1,7 @@
 
 import D from "../src/dom.js";
-import P from "../src/projects.js";
+import {myProjects, Project} from "../src/projects.js";
 
-
-console.log(P);
 
 
 

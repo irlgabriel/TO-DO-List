@@ -1,4 +1,6 @@
-import P from "../src/projects";
+import {myProjects, Project} from "../src/projects"; 
+
+
 
 
 const DOMController = () => {
@@ -8,7 +10,8 @@ const DOMController = () => {
   const mainDiv = document.querySelector(".main");
   const toDo = document.querySelector(".todo");
   const navToggler = document.querySelector(".hamburger-button");
-  const projectsUL = document.querySelector(".projects");
+  const projectToggler = document.querySelector(".projects");
+  const projectList = document.querySelector(".project-list");
 
   const toggleLeftNav = () => {
     if(leftNav.style.display != "none") {
@@ -24,25 +27,25 @@ const DOMController = () => {
   // to the projects ul
 
   const getProjectsList = () => {
-    const projects = P.projects
+    const projects = myProjects
+    console.log(projects)
     const projectsList = [];
 
     for(let project of projects) {
       let li = document.createElement("li");
-      li.innerHTML = project.name;
+      li.innerHTML = project.title;
       projectsList.push(li);
     }
 
-    return projectsList;
+    return projectsList; //an array of li elements representing projects
     
   }
 
   const toggleProjects = () => {
 
     const list = getProjectsList(); // to render on page
-    const nowToggled = projectsUL.querySelectorAll("li");
-    console.log(nowToggled)
-    console.log(list)
+    const nowToggled = projectList.querySelectorAll("li");
+
 
     if(nowToggled.length !== 0) {
       // untoggle(aka remove) the li elements
@@ -51,13 +54,14 @@ const DOMController = () => {
       }
     } else {
       for(let item of list) {
-        projectsUL.appendChild(item);
+        console.log(item)
+        projectList.appendChild(item);
       }
     }
 
   }
 
-  projectsUL.addEventListener("click", toggleProjects);
+  projectToggler.addEventListener("click", toggleProjects);
   navToggler.addEventListener("click", toggleLeftNav);
 
 
