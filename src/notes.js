@@ -5,7 +5,6 @@ function Note(title, desc, dueDate, priority) {
   this.desc = desc;
   this.dueDate = dueDate;
   this.priority = priority;
-
 }
 
 export {Note}

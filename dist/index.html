@@ -18,6 +18,31 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+
+    <!-- bootstrap 4 modal for creating new project -->
+
+    <div class="modal" id="new-project-modal">
+      <div class="modal-top">
+        <h4 class="modal-title">Add Project</h4>
+      </div>
+      <form id="new-project-form">
+
+        <div class="modal-middle">
+          <div class="form-group">
+            <label for="project-title" style="font-weight: bold; font-size: 14px;">Project title</label>
+            <input type="text" name="project-title" class="form-control">
+          </div>
+        </div>
+
+      <div class="modal-bottom d-flex justify-content-between">
+        <div class="bottom-form-buttons form-group">
+          <button type="submit" id="submit-new-project" data-dismiss="modal" class="btn btn-sm btn-outline-white">Create Project</button>
+          <button class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form> 
+    </div>
+
     <nav>
       <div class="nav-left">
         <div class="hamburger-button">
@@ -38,7 +63,7 @@
           <ul class="project-list">
             <div class="projects">
               <i class="fas fa-chevron-down"></i>
-              <span>Projects</span>
+              <a>Projects</a>
             </div>
           </ul>
         </ul>

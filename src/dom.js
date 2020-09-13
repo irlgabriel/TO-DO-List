@@ -12,6 +12,12 @@ const DOMController = () => {
   const projectToggler = document.querySelector(".projects");
   const projectList = document.querySelector(".project-list");
 
+  // EVENT LISTENER FUNCTIONS! 
+
+  const createProject = () => {
+
+  }
+
   const toggleLeftNav = () => {
     if(leftNav.style.display != "none") {
       fakeNav.style.display = "none";
@@ -27,13 +33,32 @@ const DOMController = () => {
 
   const getProjectsList = () => {
     const projects = myProjects
-    console.log(projects)
     const projectsList = [];
 
     for(let project of projects) {
+      //create list element
       let li = document.createElement("li");
-      li.innerHTML = project.title;
       projectsList.push(li);
+
+      //create project-div
+      let listDiv = document.createElement("div");
+      listDiv.classList.add("project-div")
+      li.appendChild(listDiv)
+
+      let p = document.createElement("p");
+      p.classList.add("m-0")
+      p.innerHTML = project.title;
+      listDiv.appendChild(p);
+
+      let deleteBtn = document.createElement("div")
+      deleteBtn.classList.add("fa", "fa-trash", "delete-project");
+      listDiv.appendChild(deleteBtn);
+
+      //add event listener to each project's delete btn
+      deleteBtn.addEventListener("click", (e) => {
+        //remove it from DOM
+        e.target.parentElement.remove()
+      })
     }
 
     return projectsList; //an array of li elements representing projects
@@ -49,13 +74,23 @@ const DOMController = () => {
     if(nowToggled.length !== 0) {
       // untoggle(aka remove) the li elements
       for(let item of nowToggled) {
+        //console.log(item)
         item.remove()
       }
     } else {
       for(let item of list) {
-        console.log(item)
+        //console.log(item)
         projectList.appendChild(item);
       }
+      //add "Add Project <li> element"
+      const addProject = document.createElement("li");
+      addProject.classList.add("add-project")
+      addProject.innerHTML = "Add Project"
+      projectList.appendChild(addProject)
+
+      addProject.setAttribute("data-toggle", "modal")
+      addProject.setAttribute("data-target", "#new-project-modal")
+
     }
 
   }
