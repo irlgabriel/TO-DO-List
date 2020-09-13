@@ -11,6 +11,38 @@ const DOMController = () => {
   const navToggler = document.querySelector(".hamburger-button");
   const projectToggler = document.querySelector(".projects");
   const projectList = document.querySelector(".project-list");
+  const submitForm = document.querySelector("#new-project-form")
+
+
+  // UTILITY FUNCTIONS
+
+  function convertProjectToList(project){
+    //create project-div
+    let li = document.createElement("li");
+
+    let listDiv = document.createElement("div");
+    listDiv.classList.add("project-div")
+    li.appendChild(listDiv)
+
+    let p = document.createElement("p");
+    p.classList.add("m-0")
+    p.innerHTML = project.title;
+    listDiv.appendChild(p);
+
+    let deleteBtn = document.createElement("div")
+    deleteBtn.classList.add("fa", "fa-trash", "delete-project");
+    listDiv.appendChild(deleteBtn);
+
+    //add event listener to each project's delete btn
+    deleteBtn.addEventListener("click", (e) => {
+      //remove it from DOM
+      e.target.parentElement.remove()
+    })
+
+    return li;
+
+  }
+
 
   // EVENT LISTENER FUNCTIONS! 
 
@@ -36,29 +68,10 @@ const DOMController = () => {
     const projectsList = [];
 
     for(let project of projects) {
-      //create list element
-      let li = document.createElement("li");
+
+      let li = convertProjectToList(project)
       projectsList.push(li);
 
-      //create project-div
-      let listDiv = document.createElement("div");
-      listDiv.classList.add("project-div")
-      li.appendChild(listDiv)
-
-      let p = document.createElement("p");
-      p.classList.add("m-0")
-      p.innerHTML = project.title;
-      listDiv.appendChild(p);
-
-      let deleteBtn = document.createElement("div")
-      deleteBtn.classList.add("fa", "fa-trash", "delete-project");
-      listDiv.appendChild(deleteBtn);
-
-      //add event listener to each project's delete btn
-      deleteBtn.addEventListener("click", (e) => {
-        //remove it from DOM
-        e.target.parentElement.remove()
-      })
     }
 
     return projectsList; //an array of li elements representing projects
@@ -82,6 +95,7 @@ const DOMController = () => {
         //console.log(item)
         projectList.appendChild(item);
       }
+
       //add "Add Project <li> element"
       const addProject = document.createElement("li");
       addProject.classList.add("add-project")
@@ -90,6 +104,23 @@ const DOMController = () => {
 
       addProject.setAttribute("data-toggle", "modal")
       addProject.setAttribute("data-target", "#new-project-modal")
+
+      //add event listener for addproject form
+      submitForm.addEventListener("submit", (e) => {
+        e.preventDefault()
+
+        const title = e.target.title.value;
+        const newProject = new Project(title);
+        myProjects.push(newProject);
+        console.log(myProjects)
+
+        projectList.appendChild(convertProjectToList(newProject))
+
+        //location.reload()
+
+        return false;
+
+      })
 
     }
 
