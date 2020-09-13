@@ -1,4 +1,3 @@
-import {Note, myNotes} from "../src/notes.js"
 
 const myProjects = []
 
@@ -8,9 +7,9 @@ function Project(title) {
 }
 
 Project.prototype.addNote = function(note) {
-  this.notes.push(note)
+  this.notes.push(note);
 }
 
 
-export default {myProjects,
+export  {myProjects,
                  Project };

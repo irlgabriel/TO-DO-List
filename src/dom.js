@@ -2,7 +2,6 @@ import {myProjects, Project} from "../src/projects";
 
 
 
-
 const DOMController = () => {
   const topNav = document.querySelector("nav");
   const leftNav = document.querySelector(".left-nav");
@@ -69,4 +68,4 @@ const DOMController = () => {
 
 const D = DOMController();
 
-export default D;
+export {D};
