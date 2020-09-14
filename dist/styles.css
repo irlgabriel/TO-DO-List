@@ -173,6 +173,10 @@ ul li {
 
 .notes {
   margin: 5px;
+  padding-top: 10px;
+  background-color: lightsteelblue;
+  min-height: 60vh;
+  border-radius: 15px;
 }
 
 .note {

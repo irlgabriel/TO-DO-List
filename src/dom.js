@@ -127,7 +127,7 @@ const DOMController = () => {
       let li = convertProjectToList(project)
 
       //add event listener to toggle notes when you press on project name 
-      li.addEventListener("click", () => {
+      li.addEventListener("click", (e) => {
         const notesDiv = document.querySelector(".notes")
 
         if(!notesDiv) {
@@ -140,7 +140,7 @@ const DOMController = () => {
           toDo.appendChild(notesDiv);
 
           // path: "projects[userid]/projectName/notes"
-          db.collection(collectionName).doc("default").collection("notes").get().then((querySnapshot) => {
+          db.collection(collectionName).doc(projectName).collection("notes").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               
               const noteDiv = convertNoteToDiv(doc)
@@ -168,11 +168,6 @@ const DOMController = () => {
     addProject.classList.add("add-project")
     addProject.innerHTML = "Add Project"
     
-
-    //add a new collection to the firestore db
-    addProject.addEventListener("click", () => {
-      db.collection(`project`)
-    })
 
     addProject.setAttribute("data-toggle", "modal")
     addProject.setAttribute("data-target", "#new-project-modal")
