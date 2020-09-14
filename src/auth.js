@@ -1,11 +1,14 @@
 import {D} from "../src/dom.js"
+import { Project, myProjects } from "./projects.js";
 
 const auth = firebase.auth()
+const db = firebase.firestore()
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
-
+    const userId = user.uid;
+    const collectionName = `projects${userId}`;
     //create and display user's email in top nav
     const userEmail = document.createElement("p");
     userEmail.classList.add("user-email");
@@ -19,13 +22,23 @@ firebase.auth().onAuthStateChanged(function(user) {
     D.nav.appendChild(logoutBtn);
 
     //add event listener to the button
-
     logoutBtn.addEventListener("click", () => {
       auth.signOut().then(()=> {
         location.reload()
       })
 
     })
+
+    //get projects and notes from database and render them
+    db.collection(collectionName).get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        const project = new Project(doc.id);
+        myProjects.push(project);
+      })
+    
+    })
+    
+
 
 
   } else {
@@ -35,7 +48,6 @@ firebase.auth().onAuthStateChanged(function(user) {
     D.nav.appendChild(loginBtn);
 
     //add event listener to the button
-
     loginBtn.addEventListener("click", () => {
       // Using a popup.
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -52,3 +64,4 @@ firebase.auth().onAuthStateChanged(function(user) {
     })
   }
 });
+

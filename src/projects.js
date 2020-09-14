@@ -1,4 +1,6 @@
 
+
+
 const myProjects = []
 
 function Project(title) {
@@ -9,6 +11,12 @@ function Project(title) {
 Project.prototype.addNote = function(note) {
   this.notes.push(note);
 }
+
+// seed myProjects with projects from database
+
+const db = firebase.firestore();
+
+
 
 
 export  {myProjects,

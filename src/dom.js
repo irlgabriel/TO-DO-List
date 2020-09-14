@@ -1,6 +1,6 @@
 import {myProjects, Project} from "../src/projects.js"; 
 
-
+const db = firebase.firestore()
 
 const DOMController = () => {
   const topNav = document.querySelector("nav");
@@ -47,7 +47,7 @@ const DOMController = () => {
   // EVENT LISTENER FUNCTIONS! 
 
   const createProject = () => {
-
+    
   }
 
   const toggleLeftNav = () => {
@@ -70,6 +70,22 @@ const DOMController = () => {
     for(let project of projects) {
 
       let li = convertProjectToList(project)
+
+      //add event listener to toggle notes when you press on project name 
+      li.addEventListener("click", () => {
+        const projectName = li.firstElementChild.firstElementChild.innerHTML;
+        const collectionName = `projects${firebase.auth().currentUser.uid}`
+
+
+        // path: "projects[userid]/projectName/notes"
+        db.collection(collectionName).doc("default").collection("notes").get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            
+          })
+        })
+        
+      })
+      
       projectsList.push(li);
 
     }
@@ -146,6 +162,5 @@ const DOMController = () => {
 }
 
 const D = DOMController();
-console.log(D)
 
 export {D};

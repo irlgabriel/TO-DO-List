@@ -1,8 +1,22 @@
-import {auth} from "../src/auth.js"
+import {userId} from "../src/auth.js"
 import {D} from "../src/dom.js";
 import {myProjects, Project} from "../src/projects.js";
 import {Note} from "../src/notes.js"
 
+
+
+
+/*
+db.collection(`projects${userId}`).get().then((snapshot) => {
+
+  snapshot.forEach((doc) => {
+    const project = new Project(doc.data().title);
+    console.log(project)
+    myProjects.push(project);
+  })
+})
+
+*/
 
 /*
 const df = new Project("default");
