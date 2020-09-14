@@ -78,6 +78,21 @@ const DOMController = () => {
     
   }
 
+  const getAddProjectDiv = () => {
+    //add "Add Project <li> element"
+    const addProject = document.createElement("li");
+    addProject.classList.add("add-project")
+    addProject.innerHTML = "Add Project"
+    
+
+    addProject.setAttribute("data-toggle", "modal")
+    addProject.setAttribute("data-target", "#new-project-modal")
+
+    return addProject;
+
+  }
+
+
   const toggleProjects = () => {
 
     const list = getProjectsList(); // to render on page
@@ -96,14 +111,8 @@ const DOMController = () => {
         projectList.appendChild(item);
       }
 
-      //add "Add Project <li> element"
-      const addProject = document.createElement("li");
-      addProject.classList.add("add-project")
-      addProject.innerHTML = "Add Project"
-      projectList.appendChild(addProject)
-
-      addProject.setAttribute("data-toggle", "modal")
-      addProject.setAttribute("data-target", "#new-project-modal")
+      //add "AddProject <li>"
+      projectList.appendChild(getAddProjectDiv());
 
       //add event listener for addproject form
       submitForm.addEventListener("submit", (e) => {
