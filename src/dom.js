@@ -164,6 +164,11 @@ const DOMController = () => {
     addProject.innerHTML = "Add Project"
     
 
+    //add a new collection to the firestore db
+    addProject.addEventListener("click", () => {
+      db.collection(`project`)
+    })
+
     addProject.setAttribute("data-toggle", "modal")
     addProject.setAttribute("data-target", "#new-project-modal")
 
@@ -201,6 +206,11 @@ const DOMController = () => {
         const newProject = new Project(title);
         myProjects.push(newProject);
         console.log(myProjects)
+        
+        // add new project with id = title to the user_projects collection
+        db.collection(`projects${firebase.auth().currentUser.uid}`).doc(title).set({
+
+        })
 
         projectList.appendChild(convertProjectToList(newProject))
 
