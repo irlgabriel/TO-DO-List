@@ -215,11 +215,15 @@ const DOMController = () => {
         // add new project with id = title to the user_projects collection
         db.collection(`projects${firebase.auth().currentUser.uid}`).doc(title).set({
 
+        }).then(() =>{
+          location.reload()
+        }).catch((err) => {
+          console.log(err.message)
         })
 
         projectList.appendChild(convertProjectToList(newProject))
 
-        location.reload()
+
 
         return false;
 
