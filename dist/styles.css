@@ -11,6 +11,7 @@
 nav {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 6px 15px;
   background-color: rgb(214, 72, 72);
 }
@@ -155,6 +156,19 @@ ul li {
 
 .bottom-form-buttons {
   margin-left: auto;
+}
+
+.user-email {
+  margin: 0;
+  margin-right: 15px;
+  margin-left: auto;
+  color: white;
+  font-weight: bold;
+}
+
+.user-email:before {
+  content:"Logged in as: ";
+  font-weight: 300;
 }
 
 

@@ -1,5 +1,5 @@
 import {auth} from "../src/auth.js"
-import D from "../src/dom.js";
+import {D} from "../src/dom.js";
 import {myProjects, Project} from "../src/projects.js";
 import {Note} from "../src/notes.js"
 

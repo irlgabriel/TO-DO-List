@@ -139,7 +139,8 @@ const DOMController = () => {
   navToggler.addEventListener("click", toggleLeftNav);
 
   return {
-    form: submitForm
+    form: submitForm,
+    nav: topNav
   }
 
 }
