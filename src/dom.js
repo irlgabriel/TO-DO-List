@@ -25,8 +25,45 @@ const DOMController = () => {
       case 3:
         return 'lightyellow';
       case 4:
-        return 'orange';
+        return 'lightsalmon';
     }
+  }
+
+  function convertNoteToDiv(doc) {
+    const noteDiv = document.createElement("div");
+    noteDiv.classList.add("note")
+    
+    
+    //retrieve data 
+
+    const title = doc.data().title;
+    const desc = doc.data().desc;
+    const dueDate = doc.data().dueDate.toDate()
+    const priority = doc.data().priority;
+
+    //create DOM elements for data
+
+    const noteTitle = document.createElement("p");
+    noteTitle.classList.add("note-title")
+    noteTitle.innerHTML = title;
+    noteDiv.appendChild(noteTitle);
+
+    const noteDesc = document.createElement("p");
+    noteDesc.classList.add("note-desc");
+    noteDesc.innerHTML = desc;
+    noteDiv.appendChild(noteDesc);
+
+    
+    const noteDueDate = document.createElement("p");
+    noteDueDate.classList.add("note-date");
+    noteDueDate.innerHTML = dueDate.toLocaleDateString("en-US");
+    noteDiv.appendChild(noteDueDate);
+    
+    const divColor = getColorByPriority(priority)
+
+    noteDiv.style.backgroundColor = divColor;
+
+    return noteDiv;
   }
 
   function convertProjectToList(project){
@@ -86,54 +123,29 @@ const DOMController = () => {
 
       //add event listener to toggle notes when you press on project name 
       li.addEventListener("click", () => {
-        const projectName = li.firstElementChild.firstElementChild.innerHTML;
-        const collectionName = `projects${firebase.auth().currentUser.uid}`
+        const notesDiv = document.querySelector(".notes")
 
-        //notes collection div!
-        const notesDiv = document.createElement("div");
-        notesDiv.classList.add("notes");
-        toDo.appendChild(notesDiv);
+        if(!notesDiv) {
+          const projectName = li.firstElementChild.firstElementChild.innerHTML;
+          const collectionName = `projects${firebase.auth().currentUser.uid}`
 
-        // path: "projects[userid]/projectName/notes"
-        db.collection(collectionName).doc("default").collection("notes").get().then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            
-            //note div
-            const noteDiv = document.createElement("div");
-            notesDiv.appendChild(noteDiv);
-            
-            //retrieve data 
+          //notes collection div!
+          const notesDiv = document.createElement("div");
+          notesDiv.classList.add("notes");
+          toDo.appendChild(notesDiv);
 
-            const title = doc.data().title;
-            const desc = doc.data().desc;
-            const dueDate = doc.data().dueDate.toDate()
-            const priority = doc.data().priority;
+          // path: "projects[userid]/projectName/notes"
+          db.collection(collectionName).doc("default").collection("notes").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              
+              const noteDiv = convertNoteToDiv(doc)
+              notesDiv.appendChild(noteDiv);
 
-            //create DOM elements for data
-
-            const noteTitle = document.createElement("p");
-            noteTitle.classList.add("note-title")
-            noteTitle.innerHTML = title;
-            noteDiv.appendChild(noteTitle);
-
-            const noteDesc = document.createElement("p");
-            noteDesc.classList.add("note-desc");
-            noteDesc.innerHTML = desc;
-            noteDiv.appendChild(noteDesc);
-
-            
-            const noteDueDate = document.createElement("p");
-            noteDueDate.classList.add("note-date");
-            noteDueDate.innerHTML = dueDate;
-            noteDiv.appendChild(noteDueDate);
-            
-            const divColor = getColorByPriority(priority)
-
-            noteDiv.style.backgroundColor = divColor;
-
-
+            })
           })
-        })
+        } else {
+          notesDiv.remove()
+        }
         
       })
       

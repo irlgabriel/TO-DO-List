@@ -171,6 +171,25 @@ ul li {
   font-weight: 300;
 }
 
+.notes {
+  margin: 5px;
+}
+
+.note {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.note-title {
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+}
+
+.note-date {
+  text-align: right;
+}
 
 @media only screen and (max-width: 996px) {
   .left-nav, .fake-left-nav {
