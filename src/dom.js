@@ -86,7 +86,12 @@ const DOMController = () => {
     //add event listener to each project's delete btn
     deleteBtn.addEventListener("click", (e) => {
       //remove it from DOM
+      e.stopPropagation()
+      const projectName = e.target.parentElement.firstElementChild.innerHTML;
       e.target.parentElement.remove()
+      //remove it from database!
+      db.collection(`projects${firebase.auth().currentUser.uid}`).doc(projectName).delete();
+      
     })
 
     return li;
@@ -214,7 +219,7 @@ const DOMController = () => {
 
         projectList.appendChild(convertProjectToList(newProject))
 
-        //location.reload()
+        location.reload()
 
         return false;
 
