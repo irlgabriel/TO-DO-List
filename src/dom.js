@@ -16,6 +16,19 @@ const DOMController = () => {
 
   // UTILITY FUNCTIONS
 
+  function getColorByPriority(priority) {
+    switch(priority) {
+      case 1:
+        return 'white';
+      case 2:
+        return 'lightblue';
+      case 3:
+        return 'lightyellow';
+      case 4:
+        return 'orange';
+    }
+  }
+
   function convertProjectToList(project){
     //create project-div
     let li = document.createElement("li");
@@ -76,11 +89,49 @@ const DOMController = () => {
         const projectName = li.firstElementChild.firstElementChild.innerHTML;
         const collectionName = `projects${firebase.auth().currentUser.uid}`
 
+        //notes collection div!
+        const notesDiv = document.createElement("div");
+        notesDiv.classList.add("notes");
+        toDo.appendChild(notesDiv);
 
         // path: "projects[userid]/projectName/notes"
         db.collection(collectionName).doc("default").collection("notes").get().then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             
+            //note div
+            const noteDiv = document.createElement("div");
+            notesDiv.appendChild(noteDiv);
+            
+            //retrieve data 
+
+            const title = doc.data().title;
+            const desc = doc.data().desc;
+            const dueDate = doc.data().dueDate.toDate()
+            const priority = doc.data().priority;
+
+            //create DOM elements for data
+
+            const noteTitle = document.createElement("p");
+            noteTitle.classList.add("note-title")
+            noteTitle.innerHTML = title;
+            noteDiv.appendChild(noteTitle);
+
+            const noteDesc = document.createElement("p");
+            noteDesc.classList.add("note-desc");
+            noteDesc.innerHTML = desc;
+            noteDiv.appendChild(noteDesc);
+
+            
+            const noteDueDate = document.createElement("p");
+            noteDueDate.classList.add("note-date");
+            noteDueDate.innerHTML = dueDate;
+            noteDiv.appendChild(noteDueDate);
+            
+            const divColor = getColorByPriority(priority)
+
+            noteDiv.style.backgroundColor = divColor;
+
+
           })
         })
         
