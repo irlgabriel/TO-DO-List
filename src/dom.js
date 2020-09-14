@@ -1,4 +1,4 @@
-import {myProjects, Project} from "../src/projects"; 
+import {myProjects, Project} from "../src/projects.js"; 
 
 
 
@@ -138,9 +138,13 @@ const DOMController = () => {
   projectToggler.addEventListener("click", toggleProjects);
   navToggler.addEventListener("click", toggleLeftNav);
 
+  return {
+    form: submitForm
+  }
 
 }
 
 const D = DOMController();
+console.log(D)
 
 export {D};
