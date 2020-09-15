@@ -23,13 +23,13 @@ const DOMController = () => {
     
     switch(priority) {
       case 1:
-        return "rgba(222,222,222,0.5)";
+        return 'rgba(222, 222, 222, 0.5)';
       case 2:
-        return 'rgba(0, 191, 255,0.5)';
+        return 'rgba(0, 191, 255, 0.5)';
       case 3:
         return 'rgba(255, 128, 0, 0.5)';
       case 4:
-        return 'rgb(255, 0, 64)';
+        return 'rgba(255, 0, 64, 0.5)';
     }
   }
 
@@ -139,12 +139,10 @@ const DOMController = () => {
   }
 
   const toggleLeftNav = () => {
-    if(fakeNav.style.display != "none !important") {
-      fakeNav.style.cssText = "display:none !important;";
-      //leftNav.style.display = "none";
+    if(fakeNav.style.display != "none") {
+      fakeNav.style.display = "none";
     } else {
-      fakeNav.style.cssText = "display:block !important;";
-      //leftNav.style.display = "block";
+      fakeNav.style.display = "block !important";
     }
   }
 
