@@ -45,28 +45,26 @@
 
 
     <div class="new-note-div collapse">
-      <form id="new-note-form">
-        <p class="text-center font-weight-bold">New Note!</p>
-        <div class="form-group mt-3" >
-          <input type="text" name="title" placeholder="Title.." class="form-control">
+      <form id="new-note-form"> 
+
+        <div class="form-group p-relative note-desc-group">
+          <textarea id="note-desc-area" name="desc" placeholder="Description.." rows="2" cols="50" class="form-control"></textarea>
+          <i id="calendar" data-toggle="collapse" data-target="#calendar-collapse" class="fas fa-calendar"></i>
+          
         </div>
 
-        <div class="form-group">
-          <textarea name="desc" placeholder="Description.." rows="4" cols="50" class="form-control"></textarea>
-        </div>
-
-        <div class="form-group">
+        <div class="form-group collapse" id="calendar-collapse">
           <input type="datetime-local" name="dueDate" class="form-control">
         </div>
 
-        <div class="form-group">
+        <div class="form-group" style="display: none;">
           <label for="title" style="font-weight: bold; font-size: 14px;">Priority(1-4)</label>
           <input type="number" name="priority" value="1" class="form-control">
         </div>
 
         <div class="d-flex justify-content-between">
           <div class="bottom-form-buttons form-group">
-            <button type="submit" id="submit-new-project" class="btn btn-sm btn-outline-white">Create Project</button>
+            <button type="submit" id="submit-new-project" class="btn btn-sm btn-outline-white">Add Note</button>
             <button class="btn btn-sm btn-danger" data-toggle="collapse" data-target=".new-note-div">Cancel</button>
           </div>
         </div>

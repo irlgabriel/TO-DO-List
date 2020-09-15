@@ -36,23 +36,17 @@ const DOMController = () => {
     
     //retrieve data 
 
-    const title = doc.data().title;
+    
     const desc = doc.data().desc;
     const dueDate = doc.data().dueDate.toDate()
     const priority = (doc.data().priority > 4) ? 4 : (doc.data().priority < 1) ? 1 : doc.data().priority;
 
     //create DOM elements for data
 
-    const noteTitle = document.createElement("p");
-    noteTitle.classList.add("note-title")
-    noteTitle.innerHTML = title;
-    noteDiv.appendChild(noteTitle);
-
     const noteDesc = document.createElement("p");
     noteDesc.classList.add("note-desc");
     noteDesc.innerHTML = desc;
     noteDiv.appendChild(noteDesc);
-
     
     const noteDueDate = document.createElement("p");
     noteDueDate.classList.add("note-date");
@@ -159,25 +153,27 @@ const DOMController = () => {
 
           const newNoteBtn = document.createElement("btn");
           notesDiv.appendChild(newNoteBtn);
+          notesDiv.appendChild(newNoteBtn);
           const newNoteDiv = document.querySelector(".new-note-div");
           notesDiv.appendChild(newNoteDiv);
+
           newNoteBtn.classList.add("new-note-button", "btn", "btn-outline-white", "btn-danger", "btn-sm");
           newNoteBtn.setAttribute("data-toggle", "collapse");
           newNoteBtn.setAttribute("data-target", ".new-note-div");
           newNoteBtn.innerHTML = "Add New Note";
+          
 
           const newNoteForm = document.querySelector("#new-note-form")
 
           newNoteForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            const title = e.target.title.value;
             const desc = e.target.desc.value;
-            const dueDate = e.target.dueDate.value;
+            const dueDate = e.target.dueDate.value //== "") ? (new Date()).toLocaleDateString("en-US") : e.target.dueDate.value.toDate().toLocaleDateString("en-US");
             const priority = (e.target.priority.value > 4) ? 4 : (e.target.priority.value < 1) ? 1 : e.target.priority.value
 
-            console.log(title, desc, dueDate, priority);
-
+            console.log(desc, dueDate, priority);
+            
 
 
             db.collection(`projects${firebase.auth().currentUser.uid}`);
