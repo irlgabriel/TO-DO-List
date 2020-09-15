@@ -126,7 +126,7 @@ const DOMController = () => {
       //add event listener to toggle notes when you press on project name 
       li.addEventListener("click", (e) => {
         const notesDiv = document.querySelector(".notes")
-        
+        const newNoteDiv = document.querySelector(".new-note-div");
 
         if(!notesDiv) {
           const projectName = li.firstElementChild.firstElementChild.innerHTML;
@@ -154,7 +154,6 @@ const DOMController = () => {
           const newNoteBtn = document.createElement("btn");
           notesDiv.appendChild(newNoteBtn);
           notesDiv.appendChild(newNoteBtn);
-          const newNoteDiv = document.querySelector(".new-note-div");
           notesDiv.appendChild(newNoteDiv);
 
           newNoteBtn.classList.add("new-note-button", "btn", "btn-outline-white", "btn-danger", "btn-sm");
@@ -183,6 +182,7 @@ const DOMController = () => {
           })
 
         } else {
+          document.querySelector('body').appendChild(newNoteDiv);
           notesDiv.remove()
         }
         
