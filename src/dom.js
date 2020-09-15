@@ -39,7 +39,7 @@ const DOMController = () => {
     const title = doc.data().title;
     const desc = doc.data().desc;
     const dueDate = doc.data().dueDate.toDate()
-    const priority = doc.data().priority;
+    const priority = (doc.data().priority > 4) ? 4 : (doc.data().priority < 1) ? 1 : doc.data().priority;
 
     //create DOM elements for data
 
@@ -129,6 +129,7 @@ const DOMController = () => {
       //add event listener to toggle notes when you press on project name 
       li.addEventListener("click", (e) => {
         const notesDiv = document.querySelector(".notes")
+        
 
         if(!notesDiv) {
           const projectName = li.firstElementChild.firstElementChild.innerHTML;
@@ -136,6 +137,9 @@ const DOMController = () => {
 
           //notes collection div!
           const notesDiv = document.createElement("div");
+          const newNoteDiv = document.querySelector(".new-note-div");
+          notesDiv.appendChild(newNoteDiv);
+          notesDiv.setAttribute("data-id", projectName);
           notesDiv.classList.add("notes");
           toDo.appendChild(notesDiv);
 
@@ -148,6 +152,36 @@ const DOMController = () => {
 
             })
           })
+
+          //create new button for notes creation!
+
+          const newNoteBtn = document.createElement("btn");
+          notesDiv.appendChild(newNoteBtn);
+          newNoteBtn.classList.add("new-note-button", "btn", "btn-outline-white");
+          newNoteBtn.setAttribute("data-toggle", "collapse");
+          newNoteBtn.setAttribute("data-target", ".new-note-div");
+          newNoteBtn.innerHTML = "Add New Note";
+
+          const newNoteForm = document.querySelector("#new-note-form")
+
+          newNoteForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const title = e.target.title.value;
+            const desc = e.target.desc.value;
+            const dueDate = e.target.dueDate.value;
+            const priority = (e.target.priority.value > 4) ? 4 : (e.target.priority.value < 1) ? 1 : e.target.priority.value
+
+            console.log(title, desc, dueDate, priority);
+
+
+
+            db.collection(`projects${firebase.auth().currentUser.uid}`);
+
+            return false;
+
+          })
+
         } else {
           notesDiv.remove()
         }
@@ -162,6 +196,7 @@ const DOMController = () => {
     
   }
 
+  //returns a div containing an Add-Project-button that toggles a modal for project creation
   const getAddProjectDiv = () => {
     //add "Add Project <li> element"
     const addProject = document.createElement("li");

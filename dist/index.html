@@ -40,9 +40,41 @@
           <button class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
         </div>
       </div>
-
-    </form> 
+      </form> 
     </div>
+
+
+    <div class="new-note-div collapse">
+      <form id="new-note-form">
+
+        <div class="form-group">
+          <input type="text" name="title" placeholder="Title.." class="form-control">
+        </div>
+
+        <div class="form-group">
+          <input type="text" name="desc" placeholder="Description.." class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="dueDate" style="font-weight: bold; font-size: 14px;">Date</label>
+          <input type="datetime-local" name="dueDate" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="title" style="font-weight: bold; font-size: 14px;">Priority</label>
+          <input type="number" name="priority" value="1" class="form-control">
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <div class="bottom-form-buttons form-group">
+            <button type="submit" id="submit-new-project" class="btn btn-sm btn-outline-white">Create Project</button>
+            <button class="btn btn-sm btn-danger" data-toggle="collapse" data-target=".new-note-div">Cancel</button>
+          </div>
+        </div>
+        
+      </form> 
+    </div>    
+
 
     <nav>
       <div class="nav-left">

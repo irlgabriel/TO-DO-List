@@ -195,6 +195,11 @@ ul li {
   text-align: right;
 }
 
+.new-note-div {
+  width: 60%;
+  margin: 0 auto;
+}
+
 @media only screen and (max-width: 996px) {
   .left-nav, .fake-left-nav {
     display: none !important;
