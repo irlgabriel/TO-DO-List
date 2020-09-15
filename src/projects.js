@@ -12,12 +12,5 @@ Project.prototype.addNote = function(note) {
   this.notes.push(note);
 }
 
-// seed myProjects with projects from database
-
-const db = firebase.firestore();
-
-
-
-
 export  {myProjects,
                  Project };

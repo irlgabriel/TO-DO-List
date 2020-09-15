@@ -137,7 +137,7 @@ const DOMController = () => {
   }
 
   const toggleLeftNav = () => {
-    console.log(fakeNav.style.display)
+    //console.log(fakeNav.style.display)
     if(fakeNav.style.display !== "none") {
       fakeNav.style.cssText = "display: none";
     } else {
@@ -174,6 +174,14 @@ const DOMController = () => {
           notesDiv.classList.add("notes");
           toDo.appendChild(notesDiv);
 
+          //notes div title!
+
+          const noteTitle = document.createElement("p");
+          noteTitle.innerHTML = projectName;
+          noteTitle.classList.add("project-title");
+          notesDiv.appendChild(noteTitle);
+
+
           // path: "projects[userid]/projectName/notes"
           db.collection(collectionName).doc(projectName).collection("notes").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -184,11 +192,17 @@ const DOMController = () => {
               //for each note we add a listener to toggle between opened/closed
               noteDiv.addEventListener("click", () => {
                 const editButton = noteDiv.querySelector(".edit-note");
+                
                 if(!editButton) {//opened 
                   const editButton = document.createElement("div");
                   editButton.innerHTML = "Edit Note";
                   editButton.classList.add("edit-note", "btn", "btn-sm", "btn-outline-white", "btn-danger");
                   noteDiv.append(editButton)
+
+                  editButton.addEventListener("click", (e) => {
+                    e.stopPropagation() 
+                    console.log(e.target.parentElement)
+                  })
 
                   //NEED TO ADD EDIT FUNCTIONALITY!----------------------------------------------
                 } else {

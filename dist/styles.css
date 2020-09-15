@@ -246,6 +246,16 @@ ul li {
 
 
 
+.checked {
+  user-select: none;
+  background-color: rgba(219, 219, 219, 0.418);
+}
+
+.project-title {
+  font-weight: bold;
+  border-bottom: 1px solid lightgray;
+}
+
 @media only screen and (max-width: 996px) {
   .fake-left-nav {
     display: none;
