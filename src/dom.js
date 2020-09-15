@@ -182,6 +182,21 @@ const DOMController = () => {
               const noteDiv = convertNoteToDiv(doc)
               notesDiv.appendChild(noteDiv);
 
+              //for each note we add a listener to toggle between opened/closed
+              noteDiv.addEventListener("click", () => {
+                const editButton = noteDiv.querySelector(".edit-note");
+                if(!editButton) {//opened 
+                  const editButton = document.createElement("div");
+                  editButton.innerHTML = "Edit Note";
+                  editButton.classList.add("edit-note", "btn", "btn-sm", "btn-outline-white", "btn-danger");
+                  noteDiv.append(editButton)
+
+                  //NEED TO ADD EDIT FUNCTIONALITY!----------------------------------------------
+                } else {
+                  editButton.remove()
+                }
+              })
+
             })
           })
 
