@@ -87,10 +87,13 @@ const DOMController = () => {
     deleteBtn.addEventListener("click", (e) => {
       //remove it from DOM
       e.stopPropagation()
-      const projectName = e.target.parentElement.firstElementChild.innerHTML;
-      e.target.parentElement.remove()
-      //remove it from database!
-      db.collection(`projects${firebase.auth().currentUser.uid}`).doc(projectName).delete();
+      if(confirm("Are you sure you want to delete this project? All of the associated notes will be deleted too!")) {
+        e.stopPropagation()
+        const projectName = e.target.parentElement.firstElementChild.innerHTML;
+        e.target.parentElement.remove()
+        //remove it from database!
+        db.collection(`projects${firebase.auth().currentUser.uid}`).doc(projectName).delete();
+      }
       
     })
 
@@ -137,8 +140,7 @@ const DOMController = () => {
 
           //notes collection div!
           const notesDiv = document.createElement("div");
-          const newNoteDiv = document.querySelector(".new-note-div");
-          notesDiv.appendChild(newNoteDiv);
+          
           notesDiv.setAttribute("data-id", projectName);
           notesDiv.classList.add("notes");
           toDo.appendChild(notesDiv);
@@ -157,7 +159,9 @@ const DOMController = () => {
 
           const newNoteBtn = document.createElement("btn");
           notesDiv.appendChild(newNoteBtn);
-          newNoteBtn.classList.add("new-note-button", "btn", "btn-outline-white");
+          const newNoteDiv = document.querySelector(".new-note-div");
+          notesDiv.appendChild(newNoteDiv);
+          newNoteBtn.classList.add("new-note-button", "btn", "btn-outline-white", "btn-danger", "btn-sm");
           newNoteBtn.setAttribute("data-toggle", "collapse");
           newNoteBtn.setAttribute("data-target", ".new-note-div");
           newNoteBtn.innerHTML = "Add New Note";
