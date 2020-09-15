@@ -1,11 +1,7 @@
-import {userId} from "../src/auth.js"
-import {D} from "../src/dom.js";
-import {myProjects, Project} from "../src/projects.js";
-import {Note} from "../src/notes.js"
-
-
-
-
+import { userId } from "../src/auth.js";
+import { D } from "../src/dom.js";
+import { myProjects, Project } from "../src/projects.js";
+import { Note } from "../src/notes.js";
 
 /*
 db.collection(`projects${userId}`).get().then((snapshot) => {

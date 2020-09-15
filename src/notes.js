@@ -1,5 +1,3 @@
-
-
 function Note(title, desc, dueDate, priority) {
   this.title = title;
   this.desc = desc;
@@ -7,4 +5,4 @@ function Note(title, desc, dueDate, priority) {
   this.priority = priority;
 }
 
-export {Note}
+export { Note };
