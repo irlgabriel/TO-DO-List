@@ -1,4 +1,7 @@
 import {myProjects, Project} from "../src/projects.js"; 
+import { format } from 'date-fns'
+
+
 
 const db = firebase.firestore()
 
@@ -17,45 +20,78 @@ const DOMController = () => {
   // UTILITY FUNCTIONS
 
   function getColorByPriority(priority) {
+    
     switch(priority) {
       case 1:
-        return 'white';
+        return "rgba(222,222,222,0.5)";
       case 2:
-        return 'lightblue';
+        return 'rgba(0, 191, 255,0.5)';
       case 3:
-        return 'lightyellow';
+        return 'rgba(255, 128, 0, 0.5)';
       case 4:
-        return 'lightsalmon';
+        return 'rgb(255, 0, 64)';
     }
   }
 
   function convertNoteToDiv(doc) {
     const noteDiv = document.createElement("div");
+    noteDiv.setAttribute("data-id", doc.id);
     noteDiv.classList.add("note")
-    
-    
+        
     //retrieve data 
 
-    
     const desc = doc.data().desc;
-    const dueDate = doc.data().dueDate.toDate()
-    const priority = (doc.data().priority > 4) ? 4 : (doc.data().priority < 1) ? 1 : doc.data().priority;
+    console.log(doc.data().dueDate);
+    
+    const dueDate = doc.data().dueDate
+    console.log(dueDate);
+    const priority = doc.data().priority;
 
     //create DOM elements for data
 
+    const noteDescDiv = document.createElement("div");
+    noteDescDiv.classList.add("note-desc-div")
     const noteDesc = document.createElement("p");
+    noteDescDiv.appendChild(noteDesc)
     noteDesc.classList.add("note-desc");
     noteDesc.innerHTML = desc;
-    noteDiv.appendChild(noteDesc);
+    noteDiv.appendChild(noteDescDiv);
     
     const noteDueDate = document.createElement("p");
     noteDueDate.classList.add("note-date");
-    noteDueDate.innerHTML = dueDate.toLocaleDateString("en-US");
+    noteDueDate.innerHTML = dueDate;
     noteDiv.appendChild(noteDueDate);
     
     const divColor = getColorByPriority(priority)
 
-    noteDiv.style.backgroundColor = divColor;
+    console.log(priority)
+    console.log(divColor, noteDiv)
+
+    //set note's background color according to priority!
+    noteDiv.style.cssText = `background-color: ${divColor}`;
+
+    //add delete button for note!
+    const deleteNote = document.createElement("div");
+    deleteNote.classList.add("delete-note", "fas", "fa-times");
+    noteDiv.appendChild(deleteNote);
+
+    deleteNote.addEventListener("click", (e) => {
+      if(confirm("Are you sure you want to delete this note? This action cannot be undone!")) {
+        const note = e.target.parentElement;
+        const notes = e.target.parentElement.parentElement;
+
+        const noteName = note.getAttribute("data-id");
+        const projectName = notes.getAttribute("data-id");
+
+        console.log(noteName, projectName);
+
+        db.collection(`projects${firebase.auth().currentUser.uid}`).doc(projectName).collection("notes").doc(noteName).delete().then(() => {
+          note.remove().then(() => {
+            location.reload()
+          })
+        })
+      }
+    })
 
     return noteDiv;
   }
@@ -79,11 +115,11 @@ const DOMController = () => {
 
     //add event listener to each project's delete btn
     deleteBtn.addEventListener("click", (e) => {
-      //remove it from DOM
+      
       e.stopPropagation()
       if(confirm("Are you sure you want to delete this project? All of the associated notes will be deleted too!")) {
-        e.stopPropagation()
         const projectName = e.target.parentElement.firstElementChild.innerHTML;
+        //remove it from DOM
         e.target.parentElement.remove()
         //remove it from database!
         db.collection(`projects${firebase.auth().currentUser.uid}`).doc(projectName).delete();
@@ -119,6 +155,8 @@ const DOMController = () => {
     const projects = myProjects
     const projectsList = [];
 
+
+    //console.log(projects)
     for(let project of projects) {
 
       let li = convertProjectToList(project)
@@ -129,12 +167,12 @@ const DOMController = () => {
         const newNoteDiv = document.querySelector(".new-note-div");
 
         if(!notesDiv) {
+
           const projectName = li.firstElementChild.firstElementChild.innerHTML;
           const collectionName = `projects${firebase.auth().currentUser.uid}`
 
           //notes collection div!
           const notesDiv = document.createElement("div");
-          
           notesDiv.setAttribute("data-id", projectName);
           notesDiv.classList.add("notes");
           toDo.appendChild(notesDiv);
@@ -152,15 +190,12 @@ const DOMController = () => {
           //create new button for notes creation!
 
           const newNoteBtn = document.createElement("btn");
-          notesDiv.appendChild(newNoteBtn);
-          notesDiv.appendChild(newNoteBtn);
-          notesDiv.appendChild(newNoteDiv);
-
           newNoteBtn.classList.add("new-note-button", "btn", "btn-outline-white", "btn-danger", "btn-sm");
           newNoteBtn.setAttribute("data-toggle", "collapse");
           newNoteBtn.setAttribute("data-target", ".new-note-div");
           newNoteBtn.innerHTML = "Add New Note";
-          
+          notesDiv.appendChild(newNoteBtn);
+          notesDiv.appendChild(newNoteDiv);
 
           const newNoteForm = document.querySelector("#new-note-form")
 
@@ -168,20 +203,24 @@ const DOMController = () => {
             e.preventDefault();
 
             const desc = e.target.desc.value;
-            const dueDate = e.target.dueDate.value //== "") ? (new Date()).toLocaleDateString("en-US") : e.target.dueDate.value.toDate().toLocaleDateString("en-US");
+            console.log(e.target.dueDate.value)
+            const dueDate = e.target.dueDate.value;
             const priority = (e.target.priority.value > 4) ? 4 : (e.target.priority.value < 1) ? 1 : e.target.priority.value
 
-            console.log(desc, dueDate, priority);
-            
-
-
-            db.collection(`projects${firebase.auth().currentUser.uid}`);
+            db.collection(`projects${firebase.auth().currentUser.uid}`).doc(projectName).collection("notes").add({
+              desc: desc,
+              dueDate: format(new Date(dueDate), "Y MMM do, H:mm"),
+              priority: priority,
+            }).then(() => {
+              location.reload();
+            })
 
             return false;
 
           })
 
         } else {
+
           document.querySelector('body').appendChild(newNoteDiv);
           notesDiv.remove()
         }
@@ -191,7 +230,7 @@ const DOMController = () => {
       projectsList.push(li);
 
     }
-
+    //console.log(projectsList)
     return projectsList; //an array of li elements representing projects
     
   }
@@ -244,16 +283,12 @@ const DOMController = () => {
         
         // add new project with id = title to the user_projects collection
         db.collection(`projects${firebase.auth().currentUser.uid}`).doc(title).set({
-
         }).then(() =>{
+          projectList.appendChild(convertProjectToList(newProject))
           location.reload()
         }).catch((err) => {
           console.log(err.message)
         })
-
-        projectList.appendChild(convertProjectToList(newProject))
-
-
 
         return false;
 

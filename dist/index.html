@@ -48,17 +48,17 @@
       <form id="new-note-form"> 
 
         <div class="form-group p-relative note-desc-group">
-          <textarea id="note-desc-area" name="desc" placeholder="Description.." rows="2" cols="50" class="form-control"></textarea>
-          <i id="calendar" data-toggle="collapse" data-target="#calendar-collapse" class="fas fa-calendar"></i>
+          <textarea required id="note-desc-area" name="desc" placeholder="Description.." rows="3" cols="50" class="form-control"></textarea>
+          
           
         </div>
 
-        <div class="form-group collapse" id="calendar-collapse">
-          <input type="datetime-local" name="dueDate" class="form-control">
+        <div class="form-group">
+          <input required type="datetime-local" name="dueDate" class="form-control">
         </div>
 
-        <div class="form-group" style="display: none;">
-          <label for="title" style="font-weight: bold; font-size: 14px;">Priority(1-4)</label>
+        <div class="form-group">
+          <label for="priority" style="font-weight: bold; font-size: 14px;">Priority(1-4)</label>
           <input type="number" name="priority" value="1" class="form-control">
         </div>
 
