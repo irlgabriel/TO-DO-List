@@ -20,16 +20,15 @@ const DOMController = () => {
   // UTILITY FUNCTIONS
 
   function getColorByPriority(priority) {
-    
     switch(priority) {
-      case 1:
-        return 'rgba(222, 222, 222, 0.5)';
-      case 2:
-        return 'rgba(0, 191, 255, 0.5)';
-      case 3:
-        return 'rgba(255, 128, 0, 0.5)';
-      case 4:
-        return 'rgba(255, 0, 64, 0.5)';
+      case '1':
+        return "rgba(222,222,222,0.35)";
+      case '2':
+        return 'rgba(0, 191, 255,0.35)';
+      case '3':
+        return 'rgba(255, 128, 0, 0.35)';
+      default:
+        return 'rgb(255, 0, 64, 0.35)';
     }
   }
 
@@ -41,10 +40,10 @@ const DOMController = () => {
     //retrieve data 
 
     const desc = doc.data().desc;
-    console.log(doc.data().dueDate);
+
     
     const dueDate = doc.data().dueDate
-    console.log(dueDate);
+
     const priority = doc.data().priority;
 
     //create DOM elements for data
@@ -64,7 +63,6 @@ const DOMController = () => {
     
     const divColor = getColorByPriority(priority)
 
-    console.log(priority)
     console.log(divColor, noteDiv)
 
     //set note's background color according to priority!
@@ -139,10 +137,11 @@ const DOMController = () => {
   }
 
   const toggleLeftNav = () => {
-    if(fakeNav.style.display != "none") {
-      fakeNav.style.display = "none";
+    console.log(fakeNav.style.display)
+    if(fakeNav.style.display !== "none") {
+      fakeNav.style.cssText = "display: none";
     } else {
-      fakeNav.style.display = "block !important";
+      fakeNav.style.cssText = "display: block !important";
     }
   }
 
@@ -216,7 +215,7 @@ const DOMController = () => {
             e.preventDefault();
 
             const desc = e.target.desc.value;
-            console.log(e.target.dueDate.value)
+            //console.log(e.target.dueDate.value)
             const dueDate = e.target.dueDate.value;
             const priority = (e.target.priority.value > 4) ? 4 : (e.target.priority.value < 1) ? 1 : e.target.priority.value
 
@@ -301,7 +300,7 @@ const DOMController = () => {
         const title = e.target.title.value;
         const newProject = new Project(title);
         myProjects.push(newProject);
-        console.log(myProjects)
+        //console.log(myProjects)
         
         // add new project with id = title to the user_projects collection
         db.collection(`projects${firebase.auth().currentUser.uid}`).doc(title).set({
