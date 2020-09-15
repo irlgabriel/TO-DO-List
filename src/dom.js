@@ -139,12 +139,12 @@ const DOMController = () => {
   }
 
   const toggleLeftNav = () => {
-    if(leftNav.style.display != "none") {
-      fakeNav.style.display = "none";
-      leftNav.style.display = "none";
+    if(fakeNav.style.display != "none !important") {
+      fakeNav.style.cssText = "display:none !important;";
+      //leftNav.style.display = "none";
     } else {
-      fakeNav.style.display = "block";
-      leftNav.style.display = "block";
+      fakeNav.style.cssText = "display:block !important;";
+      //leftNav.style.display = "block";
     }
   }
 
@@ -245,6 +245,15 @@ const DOMController = () => {
 
     addProject.setAttribute("data-toggle", "modal")
     addProject.setAttribute("data-target", "#new-project-modal")
+
+    // Only available to signed-in users!
+
+    addProject.addEventListener("click", (e) => {
+      if(!firebase.auth().currentUser) {
+        e.stopPropagation();
+        alert("You need to be Signed In before creating projects!");
+      }
+    })
 
     return addProject;
 

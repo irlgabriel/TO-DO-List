@@ -247,7 +247,7 @@ ul li {
 
 
 @media only screen and (max-width: 996px) {
-  .left-nav, .fake-left-nav {
-    display: none !important;
+  .fake-left-nav {
+    display: none;
   }
 }
