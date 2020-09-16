@@ -1,7 +1,10 @@
-import { myProjects, Project } from "../src/projects.js";
-import { format } from "date-fns";
+import { myProjects, Project } from "../src/projects";
+import { Note } from "../src/notes"
 
 const db = firebase.firestore();
+const auth = firebase.auth();
+
+
 
 const DOMController = () => {
   const topNav = document.querySelector("nav");
@@ -13,6 +16,57 @@ const DOMController = () => {
   const submitForm = document.querySelector("#new-project-form");
 
   // UTILITY FUNCTIONS
+
+  function renderUserEmail(email) {
+
+    // Create and display user's email in top nav
+    const userEmail = document.createElement("p");
+    userEmail.classList.add("user-email");
+    userEmail.innerHTML = email;
+    topNav.appendChild(userEmail);
+  }
+  function renderLogOutButton() {
+
+    // Create and display logout button on top nav
+    const logoutBtn = document.createElement("button");
+    logoutBtn.innerHTML = "Logout";
+    logoutBtn.classList.add("btn", "btn-outline-white");
+    topNav.appendChild(logoutBtn);
+
+    // Add event listener to the button
+    logoutBtn.addEventListener("click", () => {
+      auth.signOut().then(() => {
+        location.reload();
+      });
+    });
+  }
+
+  function renderLogInButton() {
+
+    // Create and display login button on top nav
+    const loginBtn = document.createElement("button");
+    loginBtn.innerHTML = "Login";
+    loginBtn.classList.add("btn", "btn-outline-white");
+    topNav.appendChild(loginBtn);
+
+    // Add event listener to the button
+    loginBtn.addEventListener("click", () => {
+      // Using a popup.
+      var provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope("profile");
+      provider.addScope("email");
+      firebase
+        .auth()
+        .signInWithRedirect(provider)
+        .then(function (result) {
+          // This gives you a Google Access Token.
+          var token = result.credential.accessToken;
+          // The signed-in user info.
+          var user = result.user;
+          location.reload();
+        });
+    });
+  }
 
   function getColorByPriority(priority) {
     switch (priority) {
@@ -27,19 +81,20 @@ const DOMController = () => {
     }
   }
 
-  function convertNoteToDiv(doc) {
+  // Render Note from database!
+  function renderNote(doc) {
     const noteDiv = document.createElement("div");
     noteDiv.setAttribute("data-id", doc.id);
     noteDiv.classList.add("note");
 
-    //retrieve data
-
+    // Retrieve data
+    const title = doc.data().title;
     const desc = doc.data().desc;
     const date = doc.data().date;
     const time = doc.data().time;
     const priority = doc.data().priority;
 
-    //create DOM elements for data
+    // Create DOM elements for data
 
     const noteDescDiv = document.createElement("div");
     noteDescDiv.classList.add("note-desc-div");
@@ -66,15 +121,15 @@ const DOMController = () => {
     const divColor = getColorByPriority(priority);
 
 
-    //set note's background color according to priority!
+    // Set note's background color according to priority!
     noteDiv.style.cssText = `background-color: ${divColor}`;
 
-    //add delete button for note!
+    // Add delete button for note!
     const deleteNote = document.createElement("div");
     deleteNote.classList.add("delete-note", "fas", "fa-times");
     noteDiv.appendChild(deleteNote);
 
-    //add event listener for the button!
+    // Add event listener for the button!
     deleteNote.addEventListener("click", (e) => {
       e.stopPropagation();
       if (
@@ -102,13 +157,13 @@ const DOMController = () => {
           });
       }
     });
-
-    return noteDiv;
+    notesDiv.appendChild(noteDiv);
   }
 
-  //converts Project object to associated DOM Element(<li>)
-  function convertProjectToList(project) {
-    //create project-div
+  // Render <li> associated with project(doc)
+  function renderProject(doc) {
+
+    // Create project-div
     let li = document.createElement("li");
 
     let listDiv = document.createElement("div");
@@ -124,7 +179,7 @@ const DOMController = () => {
     deleteBtn.classList.add("fa", "fa-trash", "delete-project");
     listDiv.appendChild(deleteBtn);
 
-    //add event listener to each project's delete btn
+    // Add event listener to each project's delete btn
     deleteBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (
@@ -132,20 +187,21 @@ const DOMController = () => {
           "Are you sure you want to delete this project? All of the associated notes will be deleted too!"
         )
       ) {
-        const projectName = e.target.parentElement.firstElementChild.innerHTML;
-        //remove it from DOM
-        e.target.parentElement.remove();
+        const projectName = doc.id;
+
         //remove it from database!
         db.collection(`projects${firebase.auth().currentUser.uid}`)
           .doc(projectName)
-          .delete().
-          then(() => {
+          .delete()
+          .then(() => {
             location.reload();
+          })
+          .catch((err) => {
+            console.log(err.message)
           })
       }
     });
-
-    return li;
+    
   }
 
 
@@ -202,33 +258,6 @@ const DOMController = () => {
                 const noteDiv = convertNoteToDiv(doc);
                 notesDiv.appendChild(noteDiv);
 
-                //for each note we add a listener to toggle between opened/closed
-                noteDiv.addEventListener("click", () => {
-                  const editButton = noteDiv.querySelector(".edit-note");
-
-                  if (!editButton) {
-                    //opened
-                    const editButton = document.createElement("div");
-                    editButton.innerHTML = "Edit Note";
-                    editButton.classList.add(
-                      "edit-note",
-                      "btn",
-                      "btn-sm",
-                      "btn-outline-white",
-                      "btn-danger"
-                    );
-                    noteDiv.append(editButton);
-
-                    editButton.addEventListener("click", (e) => {
-                      e.stopPropagation();
-                      console.log(e.target.parentElement);
-                    });
-
-                    //NEED TO ADD EDIT FUNCTIONALITY!----------------------------------------------
-                  } else {
-                    editButton.remove();
-                  }
-                });
               });
             });
 
@@ -364,8 +393,9 @@ const DOMController = () => {
   navToggler.addEventListener("click", toggleLeftNav);
 
   return {
-    form: submitForm,
-    nav: topNav,
+    renderUserEmail,
+    renderLogOutButton,
+    renderLogInButton,
   };
 };
 

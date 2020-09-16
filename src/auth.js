@@ -1,64 +1,54 @@
-import { D } from "../src/dom.js";
-import { Project, myProjects } from "./projects.js";
-
-const auth = firebase.auth();
+import { D } from "../src/dom";
+import { Project, myProjects } from "../src/projects";
+import { Note } from "../src/notes"
 const db = firebase.firestore();
 
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
+firebase.auth().onAuthStateChanged(function(user) {
+  if(user) {
     // User is signed in.
     const userId = user.uid;
     const collectionName = `projects${userId}`;
-    //create and display user's email in top nav
-    const userEmail = document.createElement("p");
-    userEmail.classList.add("user-email");
-    userEmail.innerHTML = user.email;
-    D.nav.appendChild(userEmail);
 
-    //create and display login button on top nav
-    const logoutBtn = document.createElement("button");
-    logoutBtn.innerHTML = "Logout";
-    logoutBtn.classList.add("btn", "btn-outline-white");
-    D.nav.appendChild(logoutBtn);
+    D.renderUserEmail(user.email);
+    D.renderLogOutButton();
 
-    //add event listener to the button
-    logoutBtn.addEventListener("click", () => {
-      auth.signOut().then(() => {
-        location.reload();
-      });
-    });
-
-    //get projects and notes from database and render them
+    // Get projects and notes from database
     db.collection(collectionName)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
+          
+          // Create project 
           const project = Project(doc.id);
           myProjects.push(project);
+          console.log(project)
+          // Get projects' notes
+          db.collection(collectionName)
+          .doc(doc.id)
+          .collection("notes")
+          .get()
+          .then(snapShot => {
+            snapShot.forEach((docRef) => {
+              project.notes.push(
+                Note(
+                  docRef.data().title,
+                  docRef.data().desc,
+                  docRef.data().date ? "" : docRef.data().date,
+                  docRef.data().time ? "" : docRef.data().time,
+                  docRef.data().priority
+                )
+              )
+            })
+          })
         });
       });
+      
   } else {
-    const loginBtn = document.createElement("button");
-    loginBtn.innerHTML = "Login";
-    loginBtn.classList.add("btn", "btn-outline-white");
-    D.nav.appendChild(loginBtn);
+    // User not logged in!
+    const collectionName = "projects";
 
-    //add event listener to the button
-    loginBtn.addEventListener("click", () => {
-      // Using a popup.
-      var provider = new firebase.auth.GoogleAuthProvider();
-      provider.addScope("profile");
-      provider.addScope("email");
-      firebase
-        .auth()
-        .signInWithRedirect(provider)
-        .then(function (result) {
-          // This gives you a Google Access Token.
-          var token = result.credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
-          location.reload();
-        });
-    });
+    D.renderLogInButton();
+
+    
   }
 });

@@ -1,4 +1,4 @@
-const Note = (title, desc, date, time, priority) => {
+const Note = (title, desc, priority, date = "", time = "") => {
   return {
     title,
     desc,
