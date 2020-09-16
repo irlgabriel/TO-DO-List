@@ -5,9 +5,7 @@ const db = firebase.firestore();
 
 const DOMController = () => {
   const topNav = document.querySelector("nav");
-  const leftNav = document.querySelector(".left-nav");
   const fakeNav = document.querySelector(".fake-left-nav");
-  const mainDiv = document.querySelector(".main");
   const toDo = document.querySelector(".todo");
   const navToggler = document.querySelector(".hamburger-button");
   const projectToggler = document.querySelector(".projects");
@@ -19,13 +17,13 @@ const DOMController = () => {
   function getColorByPriority(priority) {
     switch (priority) {
       case "1":
-        return "rgba(222,222,222,0.35)";
+        return "rgba(222,222,222,0.25)";
       case "2":
-        return "rgba(0, 191, 255,0.35)";
+        return "rgba(0, 191, 255,0.25)";
       case "3":
-        return "rgba(255, 128, 0, 0.35)";
+        return "rgba(255, 128, 0, 0.25)";
       default:
-        return "rgb(255, 0, 64, 0.35)";
+        return "rgba(255, 0, 64, 0.25)";
     }
   }
 
@@ -36,8 +34,9 @@ const DOMController = () => {
 
     //retrieve data
 
-    const desc = doc.data().desc
-    const dueDate = doc.data().dueDate;
+    const desc = doc.data().desc;
+    const date = doc.data().date;
+    const time = doc.data().time;
     const priority = doc.data().priority;
 
     //create DOM elements for data
@@ -50,14 +49,22 @@ const DOMController = () => {
     noteDesc.innerHTML = desc;
     noteDiv.appendChild(noteDescDiv);
 
-    const noteDueDate = document.createElement("p");
-    noteDueDate.classList.add("note-date");
-    noteDueDate.innerHTML = dueDate;
-    noteDiv.appendChild(noteDueDate);
+    if(date !== "") {
+      const notedate = document.createElement("p");
+      notedate.classList.add("note-date");
+      notedate.innerHTML = date;
+      noteDiv.appendChild(notedate);
+    }
+
+    if(time !== "") {
+      const noteTime = document.createElement("p");
+      noteTime.classList.add("note-time");
+      noteTime.innerHTML = time;
+      noteDiv.appendChild(noteTime);
+    }
 
     const divColor = getColorByPriority(priority);
 
-    console.log(divColor, noteDiv);
 
     //set note's background color according to priority!
     noteDiv.style.cssText = `background-color: ${divColor}`;
@@ -67,6 +74,7 @@ const DOMController = () => {
     deleteNote.classList.add("delete-note", "fas", "fa-times");
     noteDiv.appendChild(deleteNote);
 
+    //add event listener for the button!
     deleteNote.addEventListener("click", (e) => {
       e.stopPropagation();
       if (
@@ -98,6 +106,7 @@ const DOMController = () => {
     return noteDiv;
   }
 
+  //converts Project object to associated DOM Element(<li>)
   function convertProjectToList(project) {
     //create project-div
     let li = document.createElement("li");
@@ -129,19 +138,20 @@ const DOMController = () => {
         //remove it from database!
         db.collection(`projects${firebase.auth().currentUser.uid}`)
           .doc(projectName)
-          .delete();
+          .delete().
+          then(() => {
+            location.reload();
+          })
       }
     });
 
     return li;
   }
 
+
   // EVENT LISTENER FUNCTIONS!
 
-  const createProject = () => {};
-
   const toggleLeftNav = () => {
-    //console.log(fakeNav.style.display)
     if (fakeNav.style.display !== "none") {
       fakeNav.style.cssText = "display: none";
     } else {
@@ -244,8 +254,8 @@ const DOMController = () => {
             e.preventDefault();
 
             const desc = e.target.desc.value;
-            //console.log(e.target.dueDate.value)
-            const dueDate = e.target.dueDate.value;
+            const date = e.target.date.value;
+            const time = e.target.time.value;
             const priority =
               e.target.priority.value > 4
                 ? 4
@@ -257,13 +267,17 @@ const DOMController = () => {
               .doc(projectName)
               .collection("notes")
               .add({
-                desc: desc,
-                dueDate: format(new Date(dueDate), "Y MMM do, H:mm"),
-                priority: priority,
+                desc,
+                date,
+                time,
+                priority,
               })
               .then(() => {
                 location.reload();
-              });
+              })
+              .catch((err) => {
+                console.log(err.message);
+              })
 
             return false;
           });
@@ -281,6 +295,7 @@ const DOMController = () => {
 
   //returns a div containing an Add-Project-button that toggles a modal for project creation
   const getAddProjectDiv = () => {
+
     //add "Add Project <li> element"
     const addProject = document.createElement("li");
     addProject.classList.add("add-project");
@@ -308,12 +323,11 @@ const DOMController = () => {
     if (nowToggled.length !== 0) {
       // untoggle(aka remove) the li elements
       for (let item of nowToggled) {
-        //console.log(item)
+
         item.remove();
       }
     } else {
       for (let item of list) {
-        //console.log(item)
         projectList.appendChild(item);
       }
 
@@ -325,7 +339,7 @@ const DOMController = () => {
         e.preventDefault();
 
         const title = e.target.title.value;
-        const newProject = new Project(title);
+        const newProject = Project(title);
         myProjects.push(newProject);
         //console.log(myProjects)
 

@@ -33,7 +33,7 @@ firebase.auth().onAuthStateChanged(function (user) {
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          const project = new Project(doc.id);
+          const project = Project(doc.id);
           myProjects.push(project);
         });
       });

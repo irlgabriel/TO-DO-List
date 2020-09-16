@@ -1,12 +1,15 @@
 const myProjects = [];
 
-function Project(title) {
-  this.title = title;
-  this.notes = [];
+const Project = (title, notes = []) => {
+  return {
+    title,
+    notes,
+    addNote(note){
+      this.notes.push(note);
+    },
+  }
 }
 
-Project.prototype.addNote = function (note) {
-  this.notes.push(note);
-};
+
 
 export { myProjects, Project };

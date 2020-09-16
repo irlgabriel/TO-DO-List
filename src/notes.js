@@ -1,8 +1,11 @@
-function Note(title, desc, dueDate, priority) {
-  this.title = title;
-  this.desc = desc;
-  this.dueDate = dueDate;
-  this.priority = priority;
+const Note = (title, desc, date, time, priority) => {
+  return {
+    title,
+    desc,
+    date,
+    time,
+    priority,
+  }
 }
 
 export { Note };
