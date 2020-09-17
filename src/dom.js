@@ -285,11 +285,19 @@ const DOMController = () => {
 
   // EVENT LISTENER FUNCTIONS!
 
+  // + Added a little fade-in and out animation here!
   const toggleLeftNav = () => {
     if (fakeNav.style.display !== "none") {
-      fakeNav.style.cssText = "display: none";
+      fakeNav.style.cssText = "opacity: 0;"; 
+      setTimeout(() => {
+        fakeNav.style.cssText += "display: none;";
+      }, 500);
     } else {
-      fakeNav.style.cssText = "display: block !important";
+      fakeNav.style.cssText = "display: block !important; opacity: 0;"
+      setTimeout(() => {
+        fakeNav.style.cssText += "opacity: 1;";
+      }, 100);
+
     }
   };
 
