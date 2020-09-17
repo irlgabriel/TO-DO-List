@@ -231,12 +231,18 @@ const DOMController = () => {
 
     // Add event listener to toggle project's notes!
     li.addEventListener("click", (e) => { 
+      e.stopPropagation()
       const notesDiv = document.querySelector(".notes")
+      
       if(!notesDiv) {
 
         // Create notes div associated with THIS project
         const notesDiv = document.createElement("div");
+        notesDiv.style.opacity = 0;
         toDo.appendChild(notesDiv);
+        setTimeout(() => {
+          notesDiv.style.opacity = 1;
+        }, 50)     
         notesDiv.classList.add("notes");
         notesDiv.setAttribute("data-id", project.title);
 
@@ -261,7 +267,11 @@ const DOMController = () => {
           renderNote(note, notesDiv);
         })
       } else {
-        notesDiv.remove();
+        notesDiv.style.opacity = 0;
+        setTimeout(() => {
+          notesDiv.remove()
+        }, 500)
+        
       }
     })
 
@@ -297,6 +307,7 @@ const DOMController = () => {
 
   // + Added a little fade-in and out animation here!
   const toggleLeftNav = () => {
+    e.stopPropagation();
     if (fakeNav.style.display !== "none") {
       fakeNav.style.cssText = "opacity: 0;"; 
       setTimeout(() => {
