@@ -1,5 +1,4 @@
 import { myProjects, Project } from "../src/projects";
-import { Note } from "../src/notes"
 
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -182,7 +181,7 @@ const DOMController = () => {
 
   // Render <li> associated with project
   function renderProject(project) {
-
+    console.log(project)
     // Create project-div
     let li = document.createElement("li");
     projectList.appendChild(li)
@@ -210,7 +209,9 @@ const DOMController = () => {
         const projectName = project.title;
 
         // Remove it from database!
-        db.collection(`projects${firebase.auth().currentUser.uid}`)
+        db.collection("Users")
+          .doc(auth.currentUser.uid)
+          .collection("Projects")
           .doc(projectName)
           .delete()
           .then(() => {
@@ -261,7 +262,7 @@ const DOMController = () => {
     addProject.innerHTML = "Add Project";
 
     addProject.setAttribute("data-toggle", "modal");
-    addProject.setAttribute("data-target", "#new-project-modal");
+    addProject.setAttribute("data-target", "#new-project-wrapper");
 
     // Only available to signed-in users!
     addProject.addEventListener("click", (e) => {
@@ -301,6 +302,7 @@ const DOMController = () => {
 
   // EVENT LISTENER FOR THE TWO FORMS THAT I DO NOT DYNAMICALLY CREATE (NEW PROJECT AND NEW NOTE)
 
+  // New Note Form
   newNoteForm.addEventListener("submit", (e) => {
     e.preventDefault()
     const title = newNoteForm.title.value
@@ -331,6 +333,27 @@ const DOMController = () => {
     })
     
     return false;
+  })
+
+  // New Project Form
+  newProjectForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    
+    const title = newProjectForm.title.value;
+
+    db.collection("Users")
+    .doc(auth.currentUser.uid)
+    .collection("Projects")
+    .doc(title)
+    .set({
+      title
+    })
+    .then(() => {
+      location.reload()
+    })
+    .catch((err) => {
+      console.log(err.message)
+    })
   })
 
   projectToggler.addEventListener("click", toggleProjects);
