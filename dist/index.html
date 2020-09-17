@@ -21,6 +21,7 @@
 
     <!-- bootstrap 4 modal for creating new project -->
 
+    <!-- Modal containing project form -->
     <div class="modal" id="new-project-wrapper">
       <div class="modal-top">
         <h4 class="modal-title">Add Project</h4>
@@ -43,7 +44,7 @@
       </form> 
     </div>
 
-
+    <!-- Dropdown containing note form-->
     <div class="new-note-div">
       <form id="new-note"> 
 
@@ -80,7 +81,7 @@
       </form> 
     </div>    
 
-
+    <!-- Top nav -->
     <nav>
       <div class="nav-left">
         <div class="hamburger-button">
@@ -89,16 +90,22 @@
           <div></div>
         </div>
       </div>
-
       <div class="nav-right">
-
       </div>
     </nav>
 
     <div class="main row">
+
+      <!-- Left dropdown nav -->
       <div class="fake-left-nav">
+
+        <!-- Absolutely positioned ACTUAL left nav -->
         <ul class="left-nav">
+
+          <!-- Lis of projects -->
           <ul class="project-list">
+
+            <!-- "Button" to dropdown actual project elements -->
             <div class="projects">
               <i class="fas fa-chevron-down"></i>
               <a>Projects</a>
@@ -107,12 +114,11 @@
         </ul>
       </div>
 
-
+      <!-- Notes container -->
       <div class="todo col">
 
       </div>
     </div>
-
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="/__/firebase/7.20.0/firebase-app.js"></script>
