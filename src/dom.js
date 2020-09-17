@@ -103,6 +103,7 @@ const DOMController = () => {
     noteDiv.setAttribute("data-id", note.id)
     notesDiv.appendChild(noteDiv);
 
+    console.log(note)
     // Retrieve data
     const title = note.title;
     const desc = note.desc;
@@ -321,9 +322,9 @@ const DOMController = () => {
     .add({
       title,
       desc,
+      priority,
       date,
       time,
-      priority,
     })
     .then(() => {
       location.reload();

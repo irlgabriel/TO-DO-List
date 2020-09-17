@@ -213,9 +213,9 @@ ul li {
 }
 
 .new-note-div {
+  padding: 0 10px;
   display: none;
   margin: 0 auto;
-  padding: 10px;
   border-radius: 7px;
 }
 
