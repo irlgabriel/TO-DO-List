@@ -7,5 +7,6 @@ Currently trying to clean the code up and use modules and OOP principles as much
 
 # Issues :
 
-  # I need to figure how to render the project(done!) and notes associated to them just with information
-  # from the database! 
+  # (DONE!)I need to figure how to render the project(done!) and notes associated to them just with information from the database! 
+
+  # Create animations for left-nav bar and one animation for notes.

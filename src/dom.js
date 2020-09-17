@@ -235,6 +235,12 @@ const DOMController = () => {
         notesDiv.classList.add("notes");
         notesDiv.setAttribute("data-id", project.title);
 
+        // We add a paragraph with the title at the top of this div
+        const para = document.createElement("p");
+        notesDiv.appendChild(para);
+        para.classList.add("project-title")
+        para.innerHTML = project.title
+
         // First we render a Create Note button so that it stays at the top of the .notes container
         renderNewNoteButton(notesDiv);
 
