@@ -125,10 +125,13 @@ ul li {
   justify-content: space-between;
 }
 
+.project-div p {
+  margin: 0;
+}
+
 .project-div:hover {
   background-color: rgba(173, 216, 230, 0.452);
   border-radius: 5px;
-  transform: scale(1.05);
   transition: 0.3s all;
 }
 
@@ -210,10 +213,10 @@ ul li {
 }
 
 .new-note-div {
-  
+  display: none;
   margin: 0 auto;
+  padding: 10px;
   border-radius: 7px;
-  background-color: white;
 }
 
 .new-note-button {

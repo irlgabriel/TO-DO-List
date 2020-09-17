@@ -3,6 +3,8 @@ import { D } from "../src/dom.js";
 import { myProjects, Project } from "../src/projects.js";
 import { Note } from "../src/notes.js";
 
+
+
 /*
 db.collection(`projects${userId}`).get().then((snapshot) => {
 
@@ -24,4 +26,38 @@ df.addNote(newNote);
 
 console.log(myProjects)
 
+*/
+
+// Get projects and notes from database
+/*
+db.collection(collectionName)
+.get()
+.then((snapshot) => {
+  snapshot.forEach((doc) => {
+    
+    // Create project 
+    const project = Project(doc.id);
+    myProjects.push(project);
+    console.log(project)
+
+    // Get projects' notes
+    db.collection(collectionName)
+    .doc(doc.id)
+    .collection("notes")
+    .get()
+    .then(snapShot => {
+      snapShot.forEach((docRef) => {
+        project.addNote(
+          Note(
+            docRef.data().title,
+            docRef.data().desc,
+            docRef.data().date ? "" : docRef.data().date,
+            docRef.data().time ? "" : docRef.data().time,
+            docRef.data().priority
+          )
+        )
+      })
+    })
+  });
+});
 */

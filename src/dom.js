@@ -4,8 +4,6 @@ import { Note } from "../src/notes"
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-
-
 const DOMController = () => {
   const topNav = document.querySelector("nav");
   const fakeNav = document.querySelector(".fake-left-nav");
@@ -13,7 +11,10 @@ const DOMController = () => {
   const navToggler = document.querySelector(".hamburger-button");
   const projectToggler = document.querySelector(".projects");
   const projectList = document.querySelector(".project-list");
-  const submitForm = document.querySelector("#new-project-form");
+  const newProjectForm = document.querySelector("#new-project");
+  const newNoteForm = document.querySelector("#new-note")
+  const newNoteFormWrapper = document.querySelector(".new-note-div")
+  
 
   // UTILITY FUNCTIONS
 
@@ -51,7 +52,6 @@ const DOMController = () => {
 
     // Add event listener to the button
     loginBtn.addEventListener("click", () => {
-      // Using a popup.
       var provider = new firebase.auth.GoogleAuthProvider();
       provider.addScope("profile");
       provider.addScope("email");
@@ -67,6 +67,22 @@ const DOMController = () => {
         });
     });
   }
+  // Renders a new Note button that brings up a form for notes creation
+  function renderNewNoteButton(notesDiv) {
+    const newNoteBtn = document.createElement("div");
+    notesDiv.appendChild(newNoteBtn);
+    newNoteBtn.classList.add("btn", "btn-sm", "btn-outline-white", "btn-danger")
+    newNoteBtn.innerHTML = "Create Note";
+
+    // Make newNoteBtn toggle between showing and hiding the note creation form
+    newNoteBtn.addEventListener("click", () => {
+      if(newNoteFormWrapper.style.display !== "block") {
+        newNoteFormWrapper.style.display = "block";
+      } else {
+        newNoteFormWrapper.style.display = "none";
+      }
+    })
+  }
 
   function getColorByPriority(priority) {
     switch (priority) {
@@ -81,21 +97,29 @@ const DOMController = () => {
     }
   }
 
-  // Render Note from database!
-  function renderNote(doc) {
+  // Render Div associated with note object to the notesDiv DOM element
+  function renderNote(note, notesDiv) {
     const noteDiv = document.createElement("div");
-    noteDiv.setAttribute("data-id", doc.id);
     noteDiv.classList.add("note");
+    noteDiv.setAttribute("data-id", note.id)
+    notesDiv.appendChild(noteDiv);
 
     // Retrieve data
-    const title = doc.data().title;
-    const desc = doc.data().desc;
-    const date = doc.data().date;
-    const time = doc.data().time;
-    const priority = doc.data().priority;
+    const title = note.title;
+    const desc = note.desc;
+    const date = note.date;
+    const time = note.time;
+    const priority = note.priority;
 
     // Create DOM elements for data
 
+    // Title
+    const noteTitle = document.createElement("p");
+    noteTitle.classList.add("note-title");
+    noteTitle.innerHTML = title;
+    noteDiv.appendChild(noteTitle);
+
+    // Description
     const noteDescDiv = document.createElement("div");
     noteDescDiv.classList.add("note-desc-div");
     const noteDesc = document.createElement("p");
@@ -104,6 +128,7 @@ const DOMController = () => {
     noteDesc.innerHTML = desc;
     noteDiv.appendChild(noteDescDiv);
 
+    // Date
     if(date !== "") {
       const notedate = document.createElement("p");
       notedate.classList.add("note-date");
@@ -111,6 +136,7 @@ const DOMController = () => {
       noteDiv.appendChild(notedate);
     }
 
+    // Time
     if(time !== "") {
       const noteTime = document.createElement("p");
       noteTime.classList.add("note-time");
@@ -118,10 +144,8 @@ const DOMController = () => {
       noteDiv.appendChild(noteTime);
     }
 
-    const divColor = getColorByPriority(priority);
-
-
     // Set note's background color according to priority!
+    const divColor = getColorByPriority(priority);
     noteDiv.style.cssText = `background-color: ${divColor}`;
 
     // Add delete button for note!
@@ -132,46 +156,42 @@ const DOMController = () => {
     // Add event listener for the button!
     deleteNote.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (
-        confirm(
-          "Are you sure you want to delete this note? This action cannot be undone!"
-        )
-      ) {
+      if (confirm("Are you sure you want to delete this note? This action cannot be undone!")) {
         const note = e.target.parentElement;
         const notes = e.target.parentElement.parentElement;
 
-        const noteName = note.getAttribute("data-id");
-        const projectName = notes.getAttribute("data-id");
+        const projectId = notes.getAttribute("data-id");
+        const noteId = note.getAttribute("data-id");
 
-        console.log(noteName, projectName);
 
-        db.collection(`projects${firebase.auth().currentUser.uid}`)
-          .doc(projectName)
-          .collection("notes")
-          .doc(noteName)
+        db.collection('Users')
+          .doc(auth.currentUser.uid)
+          .collection("Projects")
+          .doc(projectId)
+          .collection("Notes")
+          .doc(noteId)
           .delete()
           .then(() => {
-            note.remove().then(() => {
-              location.reload();
-            });
+            location.reload();
           });
+          
       }
     });
-    notesDiv.appendChild(noteDiv);
+    
   }
 
-  // Render <li> associated with project(doc)
-  function renderProject(doc) {
+  // Render <li> associated with project
+  function renderProject(project) {
 
     // Create project-div
     let li = document.createElement("li");
+    projectList.appendChild(li)
 
     let listDiv = document.createElement("div");
     listDiv.classList.add("project-div");
     li.appendChild(listDiv);
 
     let p = document.createElement("p");
-    p.classList.add("m-0");
     p.innerHTML = project.title;
     listDiv.appendChild(p);
 
@@ -187,9 +207,9 @@ const DOMController = () => {
           "Are you sure you want to delete this project? All of the associated notes will be deleted too!"
         )
       ) {
-        const projectName = doc.id;
+        const projectName = project.title;
 
-        //remove it from database!
+        // Remove it from database!
         db.collection(`projects${firebase.auth().currentUser.uid}`)
           .doc(projectName)
           .delete()
@@ -201,8 +221,58 @@ const DOMController = () => {
           })
       }
     });
-    
+
+    // Add event listener to toggle project's notes!
+    li.addEventListener("click", (e) => { 
+      const notesDiv = document.querySelector(".notes")
+      if(!notesDiv) {
+
+        // Create notes div associated with THIS project
+        const notesDiv = document.createElement("div");
+        toDo.appendChild(notesDiv);
+        notesDiv.classList.add("notes");
+        notesDiv.setAttribute("data-id", project.title);
+
+        // First we render a Create Note button so that it stays at the top of the .notes container
+        renderNewNoteButton(notesDiv);
+
+        // Next we add a (hidden) new div that contains note form creation
+        notesDiv.appendChild(newNoteFormWrapper);
+        date.min = new Date().toISOString().split("T")[0];
+        document.querySelector("#untoggle-new-note-form").addEventListener("click", () => {
+          newNoteFormWrapper.style.display = "none";
+        })
+      
+        // Append each note to this newly created div!
+        project.notes.forEach(note => {
+          renderNote(note, notesDiv);
+        })
+      } else {
+        notesDiv.remove();
+      }
+    })
+
   }
+
+  // Creates and appends a DOM element that helps create projects!
+  const renderAddProjectDiv = () => {
+    const addProject = document.createElement("li");
+    addProject.classList.add("add-project");
+    addProject.innerHTML = "Add Project";
+
+    addProject.setAttribute("data-toggle", "modal");
+    addProject.setAttribute("data-target", "#new-project-modal");
+
+    // Only available to signed-in users!
+    addProject.addEventListener("click", (e) => {
+      if (!firebase.auth().currentUser) {
+        e.stopPropagation();
+        alert("You need to be Signed In before creating projects!");
+      }
+    });
+
+    projectList.appendChild(addProject);
+  };
 
 
   // EVENT LISTENER FUNCTIONS!
@@ -215,179 +285,53 @@ const DOMController = () => {
     }
   };
 
-  // returns an array consisting of <li> elements to append
-  // to the projects ul
-
-  const getProjectsList = () => {
-    const projects = myProjects;
-    const projectsList = [];
-
-    //console.log(projects)
-    for (let project of projects) {
-      let li = convertProjectToList(project);
-
-      //add event listener to toggle notes when you press on project name
-      li.addEventListener("click", (e) => {
-        const notesDiv = document.querySelector(".notes");
-        const newNoteDiv = document.querySelector(".new-note-div");
-
-        if (!notesDiv) {
-          const projectName = li.firstElementChild.firstElementChild.innerHTML;
-          const collectionName = `projects${firebase.auth().currentUser.uid}`;
-
-          //notes collection div!
-          const notesDiv = document.createElement("div");
-          notesDiv.setAttribute("data-id", projectName);
-          notesDiv.classList.add("notes");
-          toDo.appendChild(notesDiv);
-
-          //notes div title!
-
-          const noteTitle = document.createElement("p");
-          noteTitle.innerHTML = projectName;
-          noteTitle.classList.add("project-title");
-          notesDiv.appendChild(noteTitle);
-
-          // path: "projects[userid]/projectName/notes"
-          db.collection(collectionName)
-            .doc(projectName)
-            .collection("notes")
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                const noteDiv = convertNoteToDiv(doc);
-                notesDiv.appendChild(noteDiv);
-
-              });
-            });
-
-          //create new button for notes creation!
-
-          const newNoteBtn = document.createElement("btn");
-          newNoteBtn.classList.add(
-            "new-note-button",
-            "btn",
-            "btn-outline-white",
-            "btn-danger",
-            "btn-sm"
-          );
-          newNoteBtn.setAttribute("data-toggle", "collapse");
-          newNoteBtn.setAttribute("data-target", ".new-note-div");
-          newNoteBtn.innerHTML = "Add New Note";
-          notesDiv.appendChild(newNoteBtn);
-          notesDiv.appendChild(newNoteDiv);
-
-          const newNoteForm = document.querySelector("#new-note-form");
-
-          newNoteForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const desc = e.target.desc.value;
-            const date = e.target.date.value;
-            const time = e.target.time.value;
-            const priority =
-              e.target.priority.value > 4
-                ? 4
-                : e.target.priority.value < 1
-                ? 1
-                : e.target.priority.value;
-
-            db.collection(`projects${firebase.auth().currentUser.uid}`)
-              .doc(projectName)
-              .collection("notes")
-              .add({
-                desc,
-                date,
-                time,
-                priority,
-              })
-              .then(() => {
-                location.reload();
-              })
-              .catch((err) => {
-                console.log(err.message);
-              })
-
-            return false;
-          });
-        } else {
-          document.querySelector("body").appendChild(newNoteDiv);
-          notesDiv.remove();
-        }
-      });
-
-      projectsList.push(li);
-    }
-    //console.log(projectsList)
-    return projectsList; //an array of li elements representing projects
-  };
-
-  //returns a div containing an Add-Project-button that toggles a modal for project creation
-  const getAddProjectDiv = () => {
-
-    //add "Add Project <li> element"
-    const addProject = document.createElement("li");
-    addProject.classList.add("add-project");
-    addProject.innerHTML = "Add Project";
-
-    addProject.setAttribute("data-toggle", "modal");
-    addProject.setAttribute("data-target", "#new-project-modal");
-
-    // Only available to signed-in users!
-
-    addProject.addEventListener("click", (e) => {
-      if (!firebase.auth().currentUser) {
-        e.stopPropagation();
-        alert("You need to be Signed In before creating projects!");
-      }
-    });
-
-    return addProject;
-  };
-
   const toggleProjects = () => {
-    const list = getProjectsList(); // to render on page
-    const nowToggled = projectList.querySelectorAll("li");
-
-    if (nowToggled.length !== 0) {
-      // untoggle(aka remove) the li elements
-      for (let item of nowToggled) {
-
-        item.remove();
-      }
+    const listedProjects = document.querySelectorAll("ul li");
+    if(listedProjects.length === 0) {
+      myProjects.forEach(project => {
+        renderProject(project)
+      })
+      renderAddProjectDiv();
     } else {
-      for (let item of list) {
-        projectList.appendChild(item);
-      }
-
-      //add "AddProject <li>"
-      projectList.appendChild(getAddProjectDiv());
-
-      //add event listener for addproject form
-      submitForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const title = e.target.title.value;
-        const newProject = Project(title);
-        myProjects.push(newProject);
-        //console.log(myProjects)
-
-        // add new project with id = title to the user_projects collection
-        db.collection(`projects${firebase.auth().currentUser.uid}`)
-          .doc(title)
-          .set({})
-          .then(() => {
-            projectList.appendChild(convertProjectToList(newProject));
-            location.reload();
-          })
-          .catch((err) => {
-            console.log(err.message);
-          });
-
-        return false;
-      });
+      listedProjects.forEach(project => {
+        project.remove();
+      })
     }
-  };
+  }
+
+  // EVENT LISTENER FOR THE TWO FORMS THAT I DO NOT DYNAMICALLY CREATE (NEW PROJECT AND NEW NOTE)
+
+  newNoteForm.addEventListener("submit", (e) => {
+    e.preventDefault()
+    const title = newNoteForm.title.value
+    const desc = newNoteForm.desc.value
+    const date = newNoteForm.date.value
+    const time = newNoteForm.time.value
+    const priority = newNoteForm.priority.value;
+    const projectName = newNoteForm.parentElement.parentElement.getAttribute("data-id");
+
+    
+    db.collection("Users")
+    .doc(auth.currentUser.uid)
+    .collection("Projects")
+    .doc(projectName)
+    .collection("Notes")
+    .add({
+      title,
+      desc,
+      date,
+      time,
+      priority,
+    })
+    .then(() => {
+      location.reload();
+    })
+    .catch((err) => {
+      console.log(err.message);
+    })
+    
+    return false;
+  })
 
   projectToggler.addEventListener("click", toggleProjects);
   navToggler.addEventListener("click", toggleLeftNav);
