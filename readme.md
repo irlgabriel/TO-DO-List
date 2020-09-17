@@ -3,10 +3,10 @@
 
 # [Current deployment](https://todo-project-cfa27.web.app)
 
-Currently trying to clean the code up and use modules and OOP principles as much as possible.
-
 # Issues :
 
-  # (DONE!)I need to figure how to render the project(done!) and notes associated to them just with information from the database! 
+  # (FIXED!) The code is a hot mess!
 
-  # Create animations for left-nav bar and one animation for notes.
+  # (FIXED!) I need to figure how to render the project(done!) and notes associated to them just with information from the database! 
+
+  # (FIXED!) Create animations for left-nav bar and one animation for notes.
