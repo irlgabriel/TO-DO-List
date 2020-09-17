@@ -185,6 +185,11 @@ const DOMController = () => {
     console.log(project)
     // Create project-div
     let li = document.createElement("li");
+    li.style.opacity = 0;
+    li.style.display = "block";
+    setTimeout(() => {
+      li.style.opacity = 1;
+    }, 100)
     projectList.appendChild(li)
 
     let listDiv = document.createElement("div");
@@ -267,6 +272,11 @@ const DOMController = () => {
     const addProject = document.createElement("li");
     addProject.classList.add("add-project");
     addProject.innerHTML = "Add Project";
+    addProject.style.opacity = 0;
+    addProject.style.display = "block";
+    setTimeout(() => {
+      addProject.style.opacity = 1;
+    }, 100)
 
     addProject.setAttribute("data-toggle", "modal");
     addProject.setAttribute("data-target", "#new-project-wrapper");
@@ -310,10 +320,16 @@ const DOMController = () => {
       renderAddProjectDiv();
     } else {
       listedProjects.forEach(project => {
-        project.remove();
+        project.style.opacity = 0;
+        setTimeout(() => {
+          project.remove();
+        }, 500)
       })
     }
   }
+
+  projectToggler.addEventListener("click", toggleProjects);
+  navToggler.addEventListener("click", toggleLeftNav);
 
   // EVENT LISTENER FOR THE TWO FORMS THAT I DO NOT DYNAMICALLY CREATE (NEW PROJECT AND NEW NOTE)
 
@@ -371,8 +387,6 @@ const DOMController = () => {
     })
   })
 
-  projectToggler.addEventListener("click", toggleProjects);
-  navToggler.addEventListener("click", toggleLeftNav);
 
   return {
     renderUserEmail,

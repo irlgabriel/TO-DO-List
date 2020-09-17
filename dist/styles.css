@@ -265,6 +265,12 @@ em {
   font-size: 13px;
 }
 
+/* opacity transition for projects dropdown */
+.project-list li {
+  opacity: 0;
+  transition: all 0.5s;
+}
+
 @media only screen and (max-width: 996px) {
   .fake-left-nav {
     display: none;
