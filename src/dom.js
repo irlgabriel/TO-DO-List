@@ -70,7 +70,7 @@ const DOMController = () => {
   function renderNewNoteButton(notesDiv) {
     const newNoteBtn = document.createElement("div");
     notesDiv.appendChild(newNoteBtn);
-    newNoteBtn.classList.add("btn", "btn-sm", "btn-outline-white", "btn-danger")
+    newNoteBtn.classList.add("btn", "btn-sm", "btn-outline-white", "btn-danger", "new-note-btn")
     newNoteBtn.innerHTML = "Create Note";
 
     // Make newNoteBtn toggle between showing and hiding the note creation form
@@ -119,6 +119,12 @@ const DOMController = () => {
     noteTitle.innerHTML = title;
     noteDiv.appendChild(noteTitle);
 
+    // Hidden div containing rest of the info about this note
+    const noteInfo = document.createElement("div");
+    noteInfo.classList.add("note-info")
+    noteInfo.style.display = "none";
+    noteDiv.appendChild(noteInfo);
+
     // Description
     const noteDescDiv = document.createElement("div");
     noteDescDiv.classList.add("note-desc-div");
@@ -126,14 +132,14 @@ const DOMController = () => {
     noteDescDiv.appendChild(noteDesc);
     noteDesc.classList.add("note-desc");
     noteDesc.innerHTML = desc;
-    noteDiv.appendChild(noteDescDiv);
+    noteInfo.appendChild(noteDescDiv);
 
     // Date
     if(date !== "") {
       const notedate = document.createElement("p");
       notedate.classList.add("note-date");
       notedate.innerHTML = date;
-      noteDiv.appendChild(notedate);
+      noteInfo.appendChild(notedate);
     }
 
     // Time
@@ -141,9 +147,26 @@ const DOMController = () => {
       const noteTime = document.createElement("p");
       noteTime.classList.add("note-time");
       noteTime.innerHTML = time;
-      noteDiv.appendChild(noteTime);
+      noteInfo.appendChild(noteTime);
     }
 
+    // Toggle between showing noteInfo when clicking on a note (WITH FADE ANIMATION)
+    noteDiv.addEventListener("click", () => {
+      if(noteInfo.style.display !== "block") {
+        noteInfo.style.opacity = 0;
+        noteInfo.style.display = "block";
+        setTimeout(() => {
+          noteInfo.style.opacity = 1;
+        }, 100)
+      } else {
+        noteInfo.style.opacity = 0;
+        setTimeout(() => {
+          noteInfo.style.display = "none"; 
+        }, 500)
+      }
+    })
+
+    
     // Set note's background color according to priority!
     const divColor = getColorByPriority(priority);
     noteDiv.style.cssText = `background-color: ${divColor}`;
@@ -235,7 +258,7 @@ const DOMController = () => {
       const notesDiv = document.querySelector(".notes")
       
       if(!notesDiv) {
-
+        li.firstElementChild.classList.add("clicked");
         // Create notes div associated with THIS project
         const notesDiv = document.createElement("div");
         notesDiv.style.opacity = 0;
@@ -267,6 +290,7 @@ const DOMController = () => {
           renderNote(note, notesDiv);
         })
       } else {
+        li.firstElementChild.classList.remove("clicked")
         notesDiv.style.opacity = 0;
         setTimeout(() => {
           notesDiv.remove()

@@ -55,7 +55,7 @@ nav {
 }
 
 .todo {
-  background: rgba(255, 255, 0, 0.082);
+  background: rgba(129, 129, 129, 0.082);
   max-width: 980px;
   margin: 0 auto;
   padding: 0;
@@ -196,6 +196,7 @@ ul li {
 }
 
 .note {
+  user-select: none;
   margin: 10px 0px;
   padding: 10px;
   border-radius: 5px;
@@ -208,6 +209,7 @@ ul li {
 }
 
 .note-title {
+  margin: 0;
   font-weight: bold;
   font-size: 20px;
   text-align: center;
@@ -270,6 +272,26 @@ em {
 .project-list li {
   opacity: 0;
   transition: all 0.5s;
+}
+
+.new-note-btn {
+  align-items: center;
+}
+
+.new-note-btn:before {
+  content: "+ ";
+  font-size: 16px;
+}
+
+.clicked {
+  background-color: rgba(173, 216, 230, 0.452);
+  border-radius: 5px;
+  transition: 0.3s all;
+}
+
+.note-info {
+  opacity: 1;
+  transition: all 0.5s ease-in-out;
 }
 
 @media only screen and (max-width: 996px) {
