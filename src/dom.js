@@ -76,9 +76,16 @@ const DOMController = () => {
     // Make newNoteBtn toggle between showing and hiding the note creation form
     newNoteBtn.addEventListener("click", () => {
       if(newNoteFormWrapper.style.display !== "block") {
+        newNoteFormWrapper.style.opacity = 0;
         newNoteFormWrapper.style.display = "block";
+        setTimeout(() => {
+          newNoteFormWrapper.style.opacity = 1;
+        }, 100)
       } else {
-        newNoteFormWrapper.style.display = "none";
+        newNoteFormWrapper.style.opacity = 0;
+        setTimeout(() => {
+          newNoteFormWrapper.style.display = "none";
+        }, 500)
       }
     })
   }
@@ -282,7 +289,10 @@ const DOMController = () => {
         notesDiv.appendChild(newNoteFormWrapper);
         date.min = new Date().toISOString().split("T")[0];
         document.querySelector("#untoggle-new-note-form").addEventListener("click", () => {
+          newNoteFormWrapper.style.opacity = 0;
+        setTimeout(() => {
           newNoteFormWrapper.style.display = "none";
+        }, 500)
         })
       
         // Append each note to this newly created div!

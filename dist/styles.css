@@ -220,10 +220,12 @@ ul li {
 }
 
 .new-note-div {
+  opacity: 1;
   padding: 10px 0;
   display: none;
   margin: 0 auto;
   border-radius: 7px;
+  transition : all 0.5s;
 }
 
 .new-note-button {
