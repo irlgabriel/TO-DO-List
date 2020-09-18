@@ -17,6 +17,112 @@ const DOMController = () => {
 
   // UTILITY FUNCTIONS
 
+  function renderEditNote(note, titleVal, descVal, dateVal, timeVal, priorityVal) {
+    const editForm = document.createElement("form");
+    note.appendChild(editForm);
+    editForm.classList.add("edit-note-form");
+
+    let formGroup = document.createElement("div");
+    formGroup.classList.add("form-group");
+    editForm.appendChild(formGroup);
+
+    const title = document.createElement("input");
+    formGroup.appendChild(title);
+    title.setAttribute("type", "text");
+    title.setAttribute("name", "title");
+    title.setAttribute("placeholder", "Title..")
+    title.required = true;
+    title.id = "edit-title";
+    title.value = titleVal;
+    title.classList.add("form-control");
+
+    let formGroup1 = document.createElement("div");
+    formGroup1.classList.add("form-group");
+    editForm.appendChild(formGroup1);
+
+    const desc = document.createElement("textarea");
+    formGroup1.appendChild(desc);
+    desc.setAttribute("name", "desc")
+    desc.setAttribute("placeholder", "Description..")
+    desc.required = true;
+    desc.id = "edit-desc"
+    desc.value = descVal;
+    desc.classList.add("form-control");
+
+    let formGroup2 = document.createElement("div");
+    formGroup2.classList.add("form-group");
+    editForm.appendChild(formGroup2);
+
+    const date = document.createElement("input")
+    formGroup2.appendChild(date);
+    date.setAttribute("type", "date");
+    date.setAttribute("name", "date");
+    date.id = "edit-date"
+    date.value = dateVal;
+    date.classList.add("form-control")
+
+    let formGroup3 = document.createElement("div");
+    formGroup3.classList.add("form-group");
+    editForm.appendChild(formGroup3);
+
+    const time = document.createElement("input")
+    formGroup3.appendChild(time);
+    time.setAttribute("type", "time");
+    time.setAttribute("name", "name");
+    time.id = "edit-time"
+    time.value = timeVal;
+    time.classList.add("form-control");
+
+    let formGroup4 = document.createElement("div");
+    formGroup4.classList.add("form-group");
+    editForm.appendChild(formGroup4);
+
+    const priority = document.createElement("input")
+    formGroup4.appendChild(priority);
+    priority.setAttribute("type", "number");
+    priority.setAttribute("name", "priority")
+    priority.min = 1;
+    priority.max = 4;
+    priority.id = "edit-priority";
+    priority.value = priorityVal;
+    priority.classList.add("form-control")
+
+    // Submit button
+
+    let formGroup5 = document.createElement("div");
+    editForm.appendChild(formGroup5);
+    formGroup5.classList.add("form-group");
+    formGroup5.style.textAlign = "right";
+    
+    const submitBtn = document.createElement("btn");
+    formGroup5.appendChild(submitBtn);
+    submitBtn.classList.add("submit-edit-note", "btn-sm", "btn-danger", "btn-outline-white", "btn");
+    submitBtn.setAttribute("type", "submit");
+    submitBtn.style.margin = "auto";
+    submitBtn.innerHTML = "Save";
+    
+
+    // Add event listener to catch form
+    editForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+      console.log(e)
+      //e.preventDefault();
+
+      const noteId = e.target.parentElement.parentElement
+
+      const title = document.getElementsById("edit-title").value
+      const desc = document.getElementsById("edit-desc").value
+      const date = document.getElementsById("edit-date").value
+      const time = document.getElementsById("edit-time").value
+      const priority = document.getElementsById("edit-priority").value
+
+      console.log(noteId, title, desc, date, time, priority)
+
+      return false;
+
+    })
+  }
+
   function renderUserEmail(email) {
 
     // Create and display user's email in top nav
@@ -110,7 +216,6 @@ const DOMController = () => {
     noteDiv.setAttribute("data-id", note.id)
     notesDiv.appendChild(noteDiv);
 
-    console.log(note)
     // Retrieve data
     const title = note.title;
     const desc = note.desc;
@@ -157,9 +262,35 @@ const DOMController = () => {
       noteInfo.appendChild(noteTime);
     }
 
+    // Edit button at the bottom
+    const editBtn = document.createElement("btn")
+    noteInfo.appendChild(editBtn);
+    editBtn.classList.add("btn", "btn-sm", "btn-danger", "btn-outline-white")
+    editBtn.innerHTML = "Edit Note";
+
+    // Add event listener to that button
+
+    editBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      const noteDiv = e.target.parentElement.parentElement;
+      // const noteId = noteDiv.getAttribute("data-id");
+
+      // Remove note's child elements
+      Array.from(noteDiv.children).forEach(child => {
+        child.remove()
+      })
+
+      // And render edit form in place of it
+      renderEditNote(noteDiv, title, desc, date, time, priority);
+
+    })
+    
+
     // Toggle between showing noteInfo when clicking on a note (WITH FADE ANIMATION)
     noteDiv.addEventListener("click", () => {
       if(noteInfo.style.display !== "block") {
+
         noteInfo.style.opacity = 0;
         noteInfo.style.display = "block";
         setTimeout(() => {
@@ -212,7 +343,6 @@ const DOMController = () => {
 
   // Render <li> associated with project
   function renderProject(project) {
-    console.log(project)
     // Create project-div
     let li = document.createElement("li");
     li.style.opacity = 0;
@@ -340,7 +470,7 @@ const DOMController = () => {
   // EVENT LISTENER FUNCTIONS!
 
   // + Added a little fade-in and out animation here!
-  const toggleLeftNav = () => {
+  const toggleLeftNav = (e) => {
     e.stopPropagation();
     if (fakeNav.style.display !== "none") {
       fakeNav.style.cssText = "opacity: 0;"; 
