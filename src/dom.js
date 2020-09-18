@@ -21,6 +21,7 @@ const DOMController = () => {
     const editForm = document.createElement("form");
     note.appendChild(editForm);
     editForm.classList.add("edit-note-form");
+    editForm.min = new Date().toISOString().split("T")[0];
 
     let formGroup = document.createElement("div");
     formGroup.classList.add("form-group");
@@ -57,6 +58,7 @@ const DOMController = () => {
     formGroup2.appendChild(date);
     date.setAttribute("type", "date");
     date.setAttribute("name", "date");
+    date.min = new Date().toISOString().split("T")[0];
     date.id = "edit-date"
     date.value = dateVal;
     date.classList.add("form-control")
@@ -65,6 +67,10 @@ const DOMController = () => {
     formGroup3.classList.add("form-group");
     editForm.appendChild(formGroup3);
 
+    const timeLabel = document.createElement("label");
+    formGroup3.appendChild(timeLabel);
+    timeLabel.innerHTML = "time";
+    
     const time = document.createElement("input")
     formGroup3.appendChild(time);
     time.setAttribute("type", "time");

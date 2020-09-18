@@ -295,6 +295,30 @@ em {
   transition: all 0.5s ease-in-out;
 }
 
+#edit-title {
+  width: 40%;
+  margin: 0 auto;
+}
+
+#edit-date {
+  width: 20%;
+  margin-left: auto;
+}
+
+#edit-time {
+  width: 20%;
+  margin-left: auto;
+}
+
+#edit-priority {
+  width: 9%;
+  margin-right: auto;
+}
+
+#edit-priority:before {
+  content: "Priority(1-4)"
+}
+
 @media only screen and (max-width: 996px) {
   .fake-left-nav {
     display: none;
