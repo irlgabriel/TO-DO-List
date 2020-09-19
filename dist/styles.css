@@ -85,6 +85,12 @@ ul li {
   user-select: none;
 }
 
+.projects i {
+  transform: rotate(-90deg);
+  transition: 0.5s all;
+}
+
+
 .projects:hover {
 
   cursor: pointer;

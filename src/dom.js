@@ -13,7 +13,7 @@ const DOMController = () => {
   const newProjectForm = document.querySelector("#new-project");
   const newNoteForm = document.querySelector("#new-note")
   const newNoteFormWrapper = document.querySelector(".new-note-div")
-  
+  const projectsArrow = document.querySelector(".projects i");
 
   // UTILITY FUNCTIONS
 
@@ -153,7 +153,7 @@ const DOMController = () => {
     // Create and display logout button on top nav
     const logoutBtn = document.createElement("button");
     logoutBtn.innerHTML = "Logout";
-    logoutBtn.classList.add("btn", "btn-outline-white");
+    logoutBtn.classList.add("btn", "btn-outline-white", "btn-sm");
     topNav.appendChild(logoutBtn);
 
     // Add event listener to the button
@@ -499,20 +499,23 @@ const DOMController = () => {
       setTimeout(() => {
         fakeNav.style.cssText += "opacity: 1;";
       }, 100);
-
     }
   };
 
   const toggleProjects = () => {
     const listedProjects = document.querySelectorAll("ul li");
     if(listedProjects.length === 0) {
+      console.log(projectsArrow);
+      projectsArrow.style.cssText = "transform: rotate(0deg);"
       myProjects.forEach(project => {
         renderProject(project)
       })
       renderAddProjectDiv();
+
     } else {
       listedProjects.forEach(project => {
         project.style.opacity = 0;
+        projectsArrow.style.cssText = "transform: rotate(-90deg);"
         setTimeout(() => {
           project.remove();
         }, 500)
