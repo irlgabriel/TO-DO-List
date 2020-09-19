@@ -321,7 +321,16 @@ em {
   margin-right: auto;
 }
 
+.fa-clock {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
 
+.clear-date:before {
+  width: 20px;
+  margin: auto;
+}
 
 @media only screen and (max-width: 996px) {
   .fake-left-nav {

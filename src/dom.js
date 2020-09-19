@@ -63,6 +63,7 @@ const DOMController = () => {
     date.value = dateVal;
     date.classList.add("form-control")
 
+
     let formGroup3 = document.createElement("div");
     formGroup3.classList.add("form-group");
     editForm.appendChild(formGroup3);
@@ -107,7 +108,6 @@ const DOMController = () => {
     
 
     // Add event listener to catch form
-    console.log(editForm);
     editForm.addEventListener("submit", (e) => {
       e.preventDefault()
 
@@ -258,6 +258,17 @@ const DOMController = () => {
     noteTitle.innerHTML = title;
     noteDiv.appendChild(noteTitle);
 
+    if(new Date().toISOString().split("T")[0] <= date) {
+      // Add clock fa icon showing how much time until the note's date!
+      const clockIcon = document.createElement("div");
+      noteTitle.appendChild(clockIcon);
+      clockIcon.classList.add("fas", "fa-clock");
+      clockIcon.innerHTML = ""
+      clockIcon.style.color = getColorByPriority(priority);
+      clockIcon.style.fontSize = "22px;"
+    }
+
+    
     // Hidden div containing rest of the info about this note
     const noteInfo = document.createElement("div");
     noteInfo.classList.add("note-info")
