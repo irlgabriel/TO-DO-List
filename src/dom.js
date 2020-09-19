@@ -98,18 +98,23 @@ const DOMController = () => {
     
     const submitBtn = document.createElement("button");
     formGroup5.appendChild(submitBtn);
-    submitBtn.classList.add("submit-edit-note", "btn-sm", "btn-danger", "btn-outline-white", "btn");
+    submitBtn.classList.add("submit-edit-note", "btn-sm", "btn-danger", "btn-outline-white", "btn", "edit-note-btn");
     submitBtn.setAttribute("type", "submit");
     submitBtn.style.margin = "auto";
     submitBtn.innerHTML = "Save";
+
+    
     
 
     // Add event listener to catch form
     console.log(editForm);
     editForm.addEventListener("submit", (e) => {
       e.preventDefault()
-      console.log(e)
-      //e.preventDefault();
+
+      if(!auth.currentUser) {
+        alert("You need to be logged in before you can edit notes");
+        return;
+      }
 
       const noteId = e.target.parentElement.getAttribute("data-id");
       const projectId = e.target.parentElement.parentElement.getAttribute("data-id");
@@ -198,17 +203,22 @@ const DOMController = () => {
 
     // Make newNoteBtn toggle between showing and hiding the note creation form
     newNoteBtn.addEventListener("click", () => {
-      if(newNoteFormWrapper.style.display !== "block") {
-        newNoteFormWrapper.style.opacity = 0;
-        newNoteFormWrapper.style.display = "block";
-        setTimeout(() => {
-          newNoteFormWrapper.style.opacity = 1;
-        }, 100)
+      if(auth.currentUser) {
+        if(newNoteFormWrapper.style.display !== "block") {
+          newNoteFormWrapper.style.opacity = 0;
+          newNoteFormWrapper.style.display = "block";
+          setTimeout(() => {
+            newNoteFormWrapper.style.opacity = 1;
+          }, 100)
+        } else {
+          newNoteFormWrapper.style.opacity = 0;
+          setTimeout(() => {
+            newNoteFormWrapper.style.display = "none";
+          }, 500)
+        }
       } else {
-        newNoteFormWrapper.style.opacity = 0;
-        setTimeout(() => {
-          newNoteFormWrapper.style.display = "none";
-        }, 500)
+        alert("You need to be logged in to create notes!");
+        e.stopPropagation()
       }
     })
   }
@@ -409,6 +419,8 @@ const DOMController = () => {
     // Add event listener to toggle project's notes!
     li.addEventListener("click", (e) => { 
       e.stopPropagation()
+      console.log(e);
+      console.log(e.target)
       const notesDiv = document.querySelector(".notes")
       
       if(!notesDiv) {
@@ -483,12 +495,23 @@ const DOMController = () => {
     projectList.appendChild(addProject);
   };
 
+  // IT IS RAN IF USER IS NOT LOGGED IN
+  // CONTAINS EVENT LISTENER THAT FORBIDS THE USER TO CREATE PROJECTS OR EDIT/CREATE NOTES TO THE DEFAULT ONES!
+
+  function userNotLoggedIn() {
+    projectToggler.dispatchEvent(new Event("click"));
+    const projectDiv = document.querySelector(".project-div").parentElement
+    setTimeout(() => {
+    projectDiv.dispatchEvent(new Event("click"));
+    }, 500)
+    const editNote = document.querySelector(".edit-note-btn");
+    
+  }
 
   // EVENT LISTENER FUNCTIONS!
 
   // + Added a little fade-in and out animation here!
   const toggleLeftNav = (e) => {
-    e.stopPropagation();
     if (fakeNav.style.display !== "none") {
       fakeNav.style.cssText = "opacity: 0;"; 
       setTimeout(() => {
@@ -587,6 +610,7 @@ const DOMController = () => {
     renderUserEmail,
     renderLogOutButton,
     renderLogInButton,
+    userNotLoggedIn,
   };
 };
 

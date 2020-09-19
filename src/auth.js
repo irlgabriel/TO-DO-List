@@ -39,6 +39,25 @@ firebase.auth().onAuthStateChanged(function(user) {
     })
   } else {
     // User not logged in!
+    const project = Project("default")
+    myProjects.push(project);
+    db.collection("Users").doc("noUser").collection("Projects").doc("default").collection("Notes").get().then((querySnapshot) => {
+      querySnapshot.forEach((docRef) => {
+        project.addNote(
+          Note(
+            docRef.data().title,
+            docRef.data().desc,
+            docRef.data().date ? docRef.data().date : "",
+            docRef.data().time ? docRef.data().time : "",
+            docRef.data().priority,
+            docRef.id
+          )
+        )
+      })
+    })
+
+    D.userNotLoggedIn();
+    
     D.renderLogInButton();
   }
 });
