@@ -58,7 +58,7 @@ const DOMController = () => {
     formGroup2.appendChild(date);
     date.setAttribute("type", "date");
     date.setAttribute("name", "date");
-    date.min = new Date().toISOString().split("T")[0];
+    date.min = dateVal;
     date.id = "edit-date"
     date.value = dateVal;
     date.classList.add("form-control")
@@ -66,10 +66,6 @@ const DOMController = () => {
     let formGroup3 = document.createElement("div");
     formGroup3.classList.add("form-group");
     editForm.appendChild(formGroup3);
-
-    const timeLabel = document.createElement("label");
-    formGroup3.appendChild(timeLabel);
-    timeLabel.innerHTML = "time";
     
     const time = document.createElement("input")
     formGroup3.appendChild(time);
@@ -100,7 +96,7 @@ const DOMController = () => {
     formGroup5.classList.add("form-group");
     formGroup5.style.textAlign = "right";
     
-    const submitBtn = document.createElement("btn");
+    const submitBtn = document.createElement("button");
     formGroup5.appendChild(submitBtn);
     submitBtn.classList.add("submit-edit-note", "btn-sm", "btn-danger", "btn-outline-white", "btn");
     submitBtn.setAttribute("type", "submit");
@@ -109,20 +105,35 @@ const DOMController = () => {
     
 
     // Add event listener to catch form
+    console.log(editForm);
     editForm.addEventListener("submit", (e) => {
       e.preventDefault()
       console.log(e)
       //e.preventDefault();
 
-      const noteId = e.target.parentElement.parentElement
+      const noteId = e.target.parentElement.getAttribute("data-id");
+      const projectId = e.target.parentElement.parentElement.getAttribute("data-id");
+      const userId = auth.currentUser.uid;
 
-      const title = document.getElementsById("edit-title").value
-      const desc = document.getElementsById("edit-desc").value
-      const date = document.getElementsById("edit-date").value
-      const time = document.getElementsById("edit-time").value
-      const priority = document.getElementsById("edit-priority").value
+      const title = document.getElementById("edit-title").value
+      const desc = document.getElementById("edit-desc").value
+      const date = document.getElementById("edit-date").value
+      const time = document.getElementById("edit-time").value
+      const priority = document.getElementById("edit-priority").value
 
-      console.log(noteId, title, desc, date, time, priority)
+      db.collection("Users").doc(userId).collection("Projects").doc(projectId).collection("Notes").doc(noteId).update({
+        title,
+        desc,
+        date,
+        time,
+        priority
+      })
+      .then(() => {
+        location.reload();
+      })
+      .catch(err => {
+        console.log(err.message);
+      })
 
       return false;
 
